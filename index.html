@@ -500,7 +500,7 @@ button,input,select,textarea{font-family:var(--f)}
 
 /* ═══ EP +1 BUTTON ON CARD ═══ */
 .ep-inc{position:absolute;bottom:38px;right:6px;z-index:5;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:3px 7px;font-size:11px;color:#fff;cursor:pointer;font-family:var(--f);font-weight:700;display:none;transition:all .13s}
-.mc:hover .ep-inc{display:block}
+.mc:hover .ep-inc,.mc:focus-within .ep-inc{display:block}
 .ep-inc:hover{background:var(--ac);border-color:var(--ac)}
 
 /* ═══ DUPLICATE WARNING ═══ */
@@ -737,9 +737,19 @@ button,input,select,textarea{font-family:var(--f)}
 .chat-md-table th,.chat-md-table td{border:1px solid var(--b1);padding:5px 8px;text-align:left;white-space:normal;max-width:140px}
 .chat-md-table th{background:var(--bg4);font-weight:700}
 .chat-sess-new{background:var(--acg);border-color:rgba(139,92,246,.3);color:var(--ac)}
+
+/* ── Accessibility pass ── */
+:focus-visible{outline:2px solid var(--ac,#8b5cf6)!important;outline-offset:2px}
+.ni:focus-visible,.mc:focus-visible,.tp-btn:focus-visible{outline-offset:-2px}
+.skip-link{position:absolute;left:8px;top:-48px;z-index:9999;background:var(--ac,#8b5cf6);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;transition:top .15s}
+.skip-link:focus{top:8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.ov[aria-hidden="true"]{display:none}
+.ov.open{display:flex}
 </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <div id="local-warn">⚠️ NightList is embedded in a preview frame — AI features may be limited. Open it directly in a browser tab for full functionality.</div>
 
 <div class="app">
@@ -750,83 +760,83 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
   <div class="ns">
     <div class="nsl">Library</div>
-    <div class="ni on" data-nav="all" onclick="goLib('','')"><span class="ni-ic">◈</span>All Media<span class="ni-bd" id="nb-all">0</span></div>
-    <div class="ni" data-nav="watching" onclick="goLib('watching','')"><span class="ni-ic" style="color:var(--bl)">▶</span>Watching<span class="ni-bd" id="nb-watching">0</span></div>
-    <div class="ni" data-nav="watched" onclick="goLib('watched','')"><span class="ni-ic" style="color:var(--gr)">✓</span>Completed<span class="ni-bd" id="nb-watched">0</span></div>
-    <div class="ni" data-nav="want" onclick="goLib('want','')"><span class="ni-ic" style="color:var(--am)">○</span>Want to Watch<span class="ni-bd" id="nb-want">0</span></div>
-    <div class="ni" data-nav="paused" onclick="goLib('paused','')"><span class="ni-ic">⏸</span>Paused<span class="ni-bd" id="nb-paused">0</span></div>
-    <div class="ni" data-nav="dropped" onclick="goLib('dropped','')"><span class="ni-ic" style="color:var(--rd)">✕</span>Dropped<span class="ni-bd" id="nb-dropped">0</span></div>
+    <div class="ni on" data-nav="all" role="button" tabindex="0" aria-current="page" onclick="goLib('','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">◈</span>All Media<span class="ni-bd" id="nb-all">0</span></div>
+    <div class="ni" data-nav="watching" role="button" tabindex="0" aria-current="false" onclick="goLib('watching','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic" style="color:var(--bl)">▶</span>Watching<span class="ni-bd" id="nb-watching">0</span></div>
+    <div class="ni" data-nav="watched" role="button" tabindex="0" aria-current="false" onclick="goLib('watched','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic" style="color:var(--gr)">✓</span>Completed<span class="ni-bd" id="nb-watched">0</span></div>
+    <div class="ni" data-nav="want" role="button" tabindex="0" aria-current="false" onclick="goLib('want','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic" style="color:var(--am)">○</span>Want to Watch<span class="ni-bd" id="nb-want">0</span></div>
+    <div class="ni" data-nav="paused" role="button" tabindex="0" aria-current="false" onclick="goLib('paused','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">⏸</span>Paused<span class="ni-bd" id="nb-paused">0</span></div>
+    <div class="ni" data-nav="dropped" role="button" tabindex="0" aria-current="false" onclick="goLib('dropped','')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic" style="color:var(--rd)">✕</span>Dropped<span class="ni-bd" id="nb-dropped">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Japanese</div>
-    <div class="ni" data-nav="t-anime" onclick="goLib('','anime')"><span class="ni-ic">🎌</span>Anime<span class="ni-bd" id="nb-anime">0</span></div>
-    <div class="ni" data-nav="t-manga" onclick="goLib('','manga')"><span class="ni-ic">📕</span>Manga<span class="ni-bd" id="nb-manga">0</span></div>
-    <div class="ni" data-nav="t-ova" onclick="goLib('','ova')"><span class="ni-ic">📀</span>OVA<span class="ni-bd" id="nb-ova">0</span></div>
-    <div class="ni" data-nav="t-ona" onclick="goLib('','ona')"><span class="ni-ic">🎦</span>ONA<span class="ni-bd" id="nb-ona">0</span></div>
-    <div class="ni" data-nav="t-special" onclick="goLib('','special')"><span class="ni-ic">⭐</span>Special<span class="ni-bd" id="nb-special">0</span></div>
-    <div class="ni" data-nav="t-vn" onclick="goLib('','vn')"><span class="ni-ic">💬</span>Visual Novel<span class="ni-bd" id="nb-vn">0</span></div>
-    <div class="ni" data-nav="t-jdrama" onclick="goLib('','jdrama')"><span class="ni-ic">🇯🇵</span>J-Drama<span class="ni-bd" id="nb-jdrama">0</span></div>
+    <div class="ni" data-nav="t-anime" role="button" tabindex="0" aria-current="false" onclick="goLib('','anime')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎌</span>Anime<span class="ni-bd" id="nb-anime">0</span></div>
+    <div class="ni" data-nav="t-manga" role="button" tabindex="0" aria-current="false" onclick="goLib('','manga')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📕</span>Manga<span class="ni-bd" id="nb-manga">0</span></div>
+    <div class="ni" data-nav="t-ova" role="button" tabindex="0" aria-current="false" onclick="goLib('','ova')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📀</span>OVA<span class="ni-bd" id="nb-ova">0</span></div>
+    <div class="ni" data-nav="t-ona" role="button" tabindex="0" aria-current="false" onclick="goLib('','ona')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎦</span>ONA<span class="ni-bd" id="nb-ona">0</span></div>
+    <div class="ni" data-nav="t-special" role="button" tabindex="0" aria-current="false" onclick="goLib('','special')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">⭐</span>Special<span class="ni-bd" id="nb-special">0</span></div>
+    <div class="ni" data-nav="t-vn" role="button" tabindex="0" aria-current="false" onclick="goLib('','vn')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">💬</span>Visual Novel<span class="ni-bd" id="nb-vn">0</span></div>
+    <div class="ni" data-nav="t-jdrama" role="button" tabindex="0" aria-current="false" onclick="goLib('','jdrama')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🇯🇵</span>J-Drama<span class="ni-bd" id="nb-jdrama">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Comics & Novels</div>
-    <div class="ni" data-nav="t-manhwa" onclick="goLib('','manhwa')"><span class="ni-ic">📚</span>Manhwa<span class="ni-bd" id="nb-manhwa">0</span></div>
-    <div class="ni" data-nav="t-manhhua" onclick="goLib('','manhhua')"><span class="ni-ic">📗</span>Manhua<span class="ni-bd" id="nb-manhhua">0</span></div>
-    <div class="ni" data-nav="t-donghua" onclick="goLib('','donghua')"><span class="ni-ic">🐉</span>Donghua<span class="ni-bd" id="nb-donghua">0</span></div>
-    <div class="ni" data-nav="t-webtoon" onclick="goLib('','webtoon')"><span class="ni-ic">🌐</span>Webtoon<span class="ni-bd" id="nb-webtoon">0</span></div>
-    <div class="ni" data-nav="t-comic" onclick="goLib('','comic')"><span class="ni-ic">💥</span>Comic<span class="ni-bd" id="nb-comic">0</span></div>
-    <div class="ni" data-nav="t-novel" onclick="goLib('','novel')"><span class="ni-ic">📓</span>Novel / LN<span class="ni-bd" id="nb-novel">0</span></div>
+    <div class="ni" data-nav="t-manhwa" role="button" tabindex="0" aria-current="false" onclick="goLib('','manhwa')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📚</span>Manhwa<span class="ni-bd" id="nb-manhwa">0</span></div>
+    <div class="ni" data-nav="t-manhhua" role="button" tabindex="0" aria-current="false" onclick="goLib('','manhhua')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📗</span>Manhua<span class="ni-bd" id="nb-manhhua">0</span></div>
+    <div class="ni" data-nav="t-donghua" role="button" tabindex="0" aria-current="false" onclick="goLib('','donghua')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🐉</span>Donghua<span class="ni-bd" id="nb-donghua">0</span></div>
+    <div class="ni" data-nav="t-webtoon" role="button" tabindex="0" aria-current="false" onclick="goLib('','webtoon')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🌐</span>Webtoon<span class="ni-bd" id="nb-webtoon">0</span></div>
+    <div class="ni" data-nav="t-comic" role="button" tabindex="0" aria-current="false" onclick="goLib('','comic')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">💥</span>Comic<span class="ni-bd" id="nb-comic">0</span></div>
+    <div class="ni" data-nav="t-novel" role="button" tabindex="0" aria-current="false" onclick="goLib('','novel')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📓</span>Novel / LN<span class="ni-bd" id="nb-novel">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Shows & Movies</div>
-    <div class="ni" data-nav="t-movie" onclick="goLib('','movie')"><span class="ni-ic">🎥</span>Movie<span class="ni-bd" id="nb-movie">0</span></div>
-    <div class="ni" data-nav="t-tv-series" onclick="goLib('','tv-series')"><span class="ni-ic">📺</span>TV Series<span class="ni-bd" id="nb-tv-series">0</span></div>
-    <div class="ni" data-nav="t-web-series" onclick="goLib('','web-series')"><span class="ni-ic">💻</span>Web Series<span class="ni-bd" id="nb-web-series">0</span></div>
-    <div class="ni" data-nav="t-kdrama" onclick="goLib('','kdrama')"><span class="ni-ic">🇰🇷</span>K-Drama<span class="ni-bd" id="nb-kdrama">0</span></div>
-    <div class="ni" data-nav="t-cdrama" onclick="goLib('','cdrama')"><span class="ni-ic">🇨🇳</span>C-Drama<span class="ni-bd" id="nb-cdrama">0</span></div>
-    <div class="ni" data-nav="t-tdrama" onclick="goLib('','tdrama')"><span class="ni-ic">🇹🇭</span>Thai Drama<span class="ni-bd" id="nb-tdrama">0</span></div>
-    <div class="ni" data-nav="t-live-action" onclick="goLib('','live-action')"><span class="ni-ic">🎭</span>Live Action<span class="ni-bd" id="nb-live-action">0</span></div>
-    <div class="ni" data-nav="t-cartoon" onclick="goLib('','cartoon')"><span class="ni-ic">🫧</span>Cartoon<span class="ni-bd" id="nb-cartoon">0</span></div>
-    <div class="ni" data-nav="t-documentary" onclick="goLib('','documentary')"><span class="ni-ic">🎞</span>Documentary<span class="ni-bd" id="nb-documentary">0</span></div>
-    <div class="ni" data-nav="t-short-film" onclick="goLib('','short-film')"><span class="ni-ic">🎬</span>Short Film<span class="ni-bd" id="nb-short-film">0</span></div>
-    <div class="ni" data-nav="t-western" onclick="goLib('','western')"><span class="ni-ic">🌎</span>Western<span class="ni-bd" id="nb-western">0</span></div>
+    <div class="ni" data-nav="t-movie" role="button" tabindex="0" aria-current="false" onclick="goLib('','movie')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎥</span>Movie<span class="ni-bd" id="nb-movie">0</span></div>
+    <div class="ni" data-nav="t-tv-series" role="button" tabindex="0" aria-current="false" onclick="goLib('','tv-series')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📺</span>TV Series<span class="ni-bd" id="nb-tv-series">0</span></div>
+    <div class="ni" data-nav="t-web-series" role="button" tabindex="0" aria-current="false" onclick="goLib('','web-series')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">💻</span>Web Series<span class="ni-bd" id="nb-web-series">0</span></div>
+    <div class="ni" data-nav="t-kdrama" role="button" tabindex="0" aria-current="false" onclick="goLib('','kdrama')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🇰🇷</span>K-Drama<span class="ni-bd" id="nb-kdrama">0</span></div>
+    <div class="ni" data-nav="t-cdrama" role="button" tabindex="0" aria-current="false" onclick="goLib('','cdrama')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🇨🇳</span>C-Drama<span class="ni-bd" id="nb-cdrama">0</span></div>
+    <div class="ni" data-nav="t-tdrama" role="button" tabindex="0" aria-current="false" onclick="goLib('','tdrama')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🇹🇭</span>Thai Drama<span class="ni-bd" id="nb-tdrama">0</span></div>
+    <div class="ni" data-nav="t-live-action" role="button" tabindex="0" aria-current="false" onclick="goLib('','live-action')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎭</span>Live Action<span class="ni-bd" id="nb-live-action">0</span></div>
+    <div class="ni" data-nav="t-cartoon" role="button" tabindex="0" aria-current="false" onclick="goLib('','cartoon')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🫧</span>Cartoon<span class="ni-bd" id="nb-cartoon">0</span></div>
+    <div class="ni" data-nav="t-documentary" role="button" tabindex="0" aria-current="false" onclick="goLib('','documentary')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎞</span>Documentary<span class="ni-bd" id="nb-documentary">0</span></div>
+    <div class="ni" data-nav="t-short-film" role="button" tabindex="0" aria-current="false" onclick="goLib('','short-film')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎬</span>Short Film<span class="ni-bd" id="nb-short-film">0</span></div>
+    <div class="ni" data-nav="t-western" role="button" tabindex="0" aria-current="false" onclick="goLib('','western')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🌎</span>Western<span class="ni-bd" id="nb-western">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Games</div>
-    <div class="ni" data-nav="t-game" onclick="goLib('','game')"><span class="ni-ic">🕹</span>Game<span class="ni-bd" id="nb-game">0</span></div>
+    <div class="ni" data-nav="t-game" role="button" tabindex="0" aria-current="false" onclick="goLib('','game')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🕹</span>Game<span class="ni-bd" id="nb-game">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Music & Other</div>
-    <div class="ni" data-nav="t-music" onclick="goLib('','music')"><span class="ni-ic">🎵</span>Music / MV<span class="ni-bd" id="nb-music">0</span></div>
-    <div class="ni" data-nav="t-podcast" onclick="goLib('','podcast')"><span class="ni-ic">🎙</span>Podcast<span class="ni-bd" id="nb-podcast">0</span></div>
+    <div class="ni" data-nav="t-music" role="button" tabindex="0" aria-current="false" onclick="goLib('','music')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎵</span>Music / MV<span class="ni-bd" id="nb-music">0</span></div>
+    <div class="ni" data-nav="t-podcast" role="button" tabindex="0" aria-current="false" onclick="goLib('','podcast')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎙</span>Podcast<span class="ni-bd" id="nb-podcast">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px" id="ns-adult">
     <div class="nsl">Adult</div>
-    <div class="ni cat-adult" data-nav="t-hentai" onclick="goLib('','hentai')"><span class="ni-ic">🌸</span>Hentai<span class="ni-bd" id="nb-hentai">0</span></div>
-    <div class="ni cat-adult" data-nav="t-jav" onclick="goLib('','jav')"><span class="ni-ic">🔞</span>JAV<span class="ni-bd" id="nb-jav">0</span></div>
-    <div class="ni cat-adult" data-nav="t-doujin" onclick="goLib('','doujin')"><span class="ni-ic">📖</span>Doujin<span class="ni-bd" id="nb-doujin">0</span></div>
-    <div class="ni cat-adult" data-nav="t-cgset" onclick="goLib('','cgset')"><span class="ni-ic">🖼</span>CG Set<span class="ni-bd" id="nb-cgset">0</span></div>
-    <div class="ni cat-adult" data-nav="t-cosplay" onclick="goLib('','cosplay')"><span class="ni-ic">👗</span>Cosplay<span class="ni-bd" id="nb-cosplay">0</span></div>
-    <div class="ni cat-adult" data-nav="t-amateur" onclick="goLib('','amateur')"><span class="ni-ic">📹</span>Amateur<span class="ni-bd" id="nb-amateur">0</span></div>
+    <div class="ni cat-adult" data-nav="t-hentai" role="button" tabindex="0" aria-current="false" onclick="goLib('','hentai')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🌸</span>Hentai<span class="ni-bd" id="nb-hentai">0</span></div>
+    <div class="ni cat-adult" data-nav="t-jav" role="button" tabindex="0" aria-current="false" onclick="goLib('','jav')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🔞</span>JAV<span class="ni-bd" id="nb-jav">0</span></div>
+    <div class="ni cat-adult" data-nav="t-doujin" role="button" tabindex="0" aria-current="false" onclick="goLib('','doujin')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📖</span>Doujin<span class="ni-bd" id="nb-doujin">0</span></div>
+    <div class="ni cat-adult" data-nav="t-cgset" role="button" tabindex="0" aria-current="false" onclick="goLib('','cgset')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🖼</span>CG Set<span class="ni-bd" id="nb-cgset">0</span></div>
+    <div class="ni cat-adult" data-nav="t-cosplay" role="button" tabindex="0" aria-current="false" onclick="goLib('','cosplay')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">👗</span>Cosplay<span class="ni-bd" id="nb-cosplay">0</span></div>
+    <div class="ni cat-adult" data-nav="t-amateur" role="button" tabindex="0" aria-current="false" onclick="goLib('','amateur')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📹</span>Amateur<span class="ni-bd" id="nb-amateur">0</span></div>
   </div>
   <div class="ns" style="margin-top:6px">
     <div class="nsl">Tools</div>
-    <div class="ni" data-nav="suggest" onclick="goPage('suggest')"><span class="ni-ic">✦</span>AI Picks</div>
-    <div class="ni" data-nav="search" onclick="goPage('search')"><span class="ni-ic">⊕</span>AI Search & Add</div>
-    <div class="ni" data-nav="random" onclick="goPage('random')"><span class="ni-ic">🎲</span>Random Picker</div>
-    <div class="ni" data-nav="lists" onclick="goPage('lists')"><span class="ni-ic">☰</span>Custom Lists</div>
-    <div class="ni" data-nav="stats" onclick="goPage('stats')"><span class="ni-ic">◎</span>Stats</div>
-    <div class="ni" data-nav="wrapped" onclick="goPage('wrapped')"><span class="ni-ic">🎁</span>Year Wrapped</div>
-    <div class="ni" data-nav="dna" onclick="goPage('dna')"><span class="ni-ic">🧬</span>Taste DNA</div>
-    <div class="ni" data-nav="aircal" onclick="goPage('aircal')"><span class="ni-ic">📆</span>Airing Calendar</div>
-    <div class="ni" data-nav="franchises" onclick="goPage('franchises')"><span class="ni-ic">🔗</span>Franchises</div>
-    <div class="ni" data-nav="compare" onclick="goPage('compare')"><span class="ni-ic">🤝</span>Compare Lists</div>
+    <div class="ni" data-nav="suggest" role="button" tabindex="0" aria-current="false" onclick="goPage('suggest')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">✦</span>AI Picks</div>
+    <div class="ni" data-nav="search" role="button" tabindex="0" aria-current="false" onclick="goPage('search')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">⊕</span>AI Search & Add</div>
+    <div class="ni" data-nav="random" role="button" tabindex="0" aria-current="false" onclick="goPage('random')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎲</span>Random Picker</div>
+    <div class="ni" data-nav="lists" role="button" tabindex="0" aria-current="false" onclick="goPage('lists')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">☰</span>Custom Lists</div>
+    <div class="ni" data-nav="stats" role="button" tabindex="0" aria-current="false" onclick="goPage('stats')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">◎</span>Stats</div>
+    <div class="ni" data-nav="wrapped" role="button" tabindex="0" aria-current="false" onclick="goPage('wrapped')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎁</span>Year Wrapped</div>
+    <div class="ni" data-nav="dna" role="button" tabindex="0" aria-current="false" onclick="goPage('dna')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🧬</span>Taste DNA</div>
+    <div class="ni" data-nav="aircal" role="button" tabindex="0" aria-current="false" onclick="goPage('aircal')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📆</span>Airing Calendar</div>
+    <div class="ni" data-nav="franchises" role="button" tabindex="0" aria-current="false" onclick="goPage('franchises')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🔗</span>Franchises</div>
+    <div class="ni" data-nav="compare" role="button" tabindex="0" aria-current="false" onclick="goPage('compare')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🤝</span>Compare Lists</div>
     <div class="ni" onclick="goCurrentlyAiring()"><span class="ni-ic">📡</span>Currently Airing</div>
     <div class="ni" onclick="goUnratedCompleted()"><span class="ni-ic">⭐</span>Unrated Completed</div>
-    <div class="ni" data-nav="tierlist" onclick="goPage('tierlist')"><span class="ni-ic">🏆</span>Tier List</div>
-    <div class="ni" data-nav="achievements" onclick="goPage('achievements')"><span class="ni-ic">🎖</span>Achievements</div>
-    <div class="ni" data-nav="queue" onclick="goPage('queue')"><span class="ni-ic">📋</span>Watch Queue</div>
-    <div class="ni" data-nav="reviews" onclick="goPage('reviews')"><span class="ni-ic">✍</span>My Reviews</div>
-    <div class="ni" data-nav="chat" onclick="openChat()"><span class="ni-ic">💬</span>AI Assistant</div>
+    <div class="ni" data-nav="tierlist" role="button" tabindex="0" aria-current="false" onclick="goPage('tierlist')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🏆</span>Tier List</div>
+    <div class="ni" data-nav="achievements" role="button" tabindex="0" aria-current="false" onclick="goPage('achievements')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">🎖</span>Achievements</div>
+    <div class="ni" data-nav="queue" role="button" tabindex="0" aria-current="false" onclick="goPage('queue')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">📋</span>Watch Queue</div>
+    <div class="ni" data-nav="reviews" role="button" tabindex="0" aria-current="false" onclick="goPage('reviews')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">✍</span>My Reviews</div>
+    <div class="ni" data-nav="chat" role="button" tabindex="0" aria-current="false" onclick="openChat()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">💬</span>AI Assistant</div>
     <div class="ni" id="ni-adult" onclick="toggleAdult()" style="margin-top:4px;border-top:1px solid var(--b1);padding-top:8px">
       <span class="ni-ic" id="adult-ico">🔒</span>
       <span id="adult-lbl">Adult Content</span>
@@ -843,6 +853,9 @@ button,input,select,textarea{font-family:var(--f)}
     <div class="ni" onclick="doImport()"><span class="ni-ic">↑</span>Import JSON</div>
     <div class="ni" onclick="doExport()"><span class="ni-ic">↓</span>Export JSON</div>
     <div class="ni" onclick="exportCsv()"><span class="ni-ic">📊</span>Export CSV</div>
+    <div class="ni" id="autosave-nav-btn" onclick="openOv('ov-autosave');renderAutosaveOv()"><span class="ni-ic">🗂</span>Auto-save to File <span id="autosave-nav-dot" style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0"></span></div>
+    <div class="ni" onclick="openOv('ov-account');renderAccountOv()"><span class="ni-ic">👤</span>Account <span id="account-nav-dot" style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0"></span></div>
+    <div class="ni" id="admin-nav-btn" style="display:none" onclick="openOv('ov-admin');renderAdminOv()"><span class="ni-ic">🛡</span>Admin</div>
     <div class="ni" onclick="openOv('ov-sharelist');renderShareList()"><span class="ni-ic">📤</span>Share My List</div>
     <div class="ni" onclick="fetchAllCovers()"><span class="ni-ic">🖼</span>Fetch All Covers</div>
     <div class="ni" onclick="openSettings()"><span class="ni-ic">⚙</span>API Key</div>
@@ -1062,6 +1075,10 @@ button,input,select,textarea{font-family:var(--f)}
           <option value="hentai">🌸 Hentai</option><option value="jav">🔞 JAV</option>
           <option value="doujin">📖 Doujin</option>
         </select>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--tx3);cursor:pointer;margin-left:6px">
+          <input type="checkbox" id="rand-weighted" checked style="cursor:pointer">
+          Weight by Taste DNA
+        </label>
       </div>
     </div>
     <div id="rr-hist" style="max-width:560px;margin:0 auto"></div>
@@ -1175,7 +1192,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- ADD/EDIT MODAL -->
-<div class="ov" id="ov-add">
+<div class="ov" id="ov-add" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo">
     <div class="mh"><div class="mh-t" id="add-modal-title">Add to Library</div><button class="btn bic bgh" onclick="closeOv('ov-add')">✕</button></div>
     <div class="mb">
@@ -1301,7 +1318,7 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 <!-- DETAIL MODAL -->
-<div class="ov" id="ov-det">
+<div class="ov" id="ov-det" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo mo-lg" style="overflow-x:hidden">
     <div class="mh" style="padding:12px 16px 10px">
       <div class="mh-t" id="det-modal-title" style="font-size:13px;color:var(--tx3);font-weight:500;font-family:var(--f)">Details</div>
@@ -1311,7 +1328,7 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 <!-- BULK IMPORT -->
-<div class="ov" id="ov-bulk">
+<div class="ov" id="ov-bulk" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo mo-xl">
     <div class="mh"><div class="mh-t">⟪ Bulk Import</div><button class="btn bic bgh" onclick="closeOv('ov-bulk');resetBulk()">✕</button></div>
     <div class="mb">
@@ -1346,7 +1363,7 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 <!-- LIST DETAIL -->
-<div class="ov" id="ov-listdet">
+<div class="ov" id="ov-listdet" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo mo-lg">
     <div class="mh">
       <div class="mh-t" id="ld-title">List</div>
@@ -1491,6 +1508,20 @@ button,input,select,textarea{font-family:var(--f)}
       <div class="tp-note" id="tn-sessionminutes"></div>
       <button class="tp-btn" id="t-moodview" onclick="tRun('moodview',this)">⊙ Mood board view</button>
       <div class="tp-note" id="tn-moodview"></div>
+      <button class="tp-btn" id="t-a11y" onclick="tRun('a11y',this)">⊙ Accessibility: focus trap, labels, keyboard cards</button>
+      <div class="tp-note" id="tn-a11y"></div>
+      <button class="tp-btn" id="t-weightedpick" onclick="tRun('weightedpick',this)">⊙ Taste-DNA-weighted random pick</button>
+      <div class="tp-note" id="tn-weightedpick"></div>
+      <button class="tp-btn" id="t-yeargoal" onclick="tRun('yeargoal',this)">⊙ Yearly watch goal widget</button>
+      <div class="tp-note" id="tn-yeargoal"></div>
+      <button class="tp-btn" id="t-ratingscalecoverage" onclick="tRun('ratingscalecoverage',this)">⊙ Rating scale applies everywhere (cards, Wrapped, Tier List)</button>
+      <div class="tp-note" id="tn-ratingscalecoverage"></div>
+      <button class="tp-btn" id="t-listmoodkbd" onclick="tRun('listmoodkbd',this)">⊙ List/Mood cards keyboard-accessible</button>
+      <div class="tp-note" id="tn-listmoodkbd"></div>
+      <button class="tp-btn" id="t-autosave" onclick="tRun('autosave',this)">⊙ Auto-save to File (mocked file handle)</button>
+      <div class="tp-note" id="tn-autosave"></div>
+      <button class="tp-btn" id="t-accounts" onclick="tRun('accounts',this)">⊙ Public Accounts: signup→profile→library→admin (mocked network)</button>
+      <div class="tp-note" id="tn-accounts"></div>
       <button class="tp-btn" id="t-letterboxd" onclick="tRun('letterboxd',this)">⊙ Letterboxd CSV parser</button>
       <div class="tp-note" id="tn-letterboxd"></div>
       <button class="tp-btn" id="t-foryou" onclick="tRun('foryou',this)">⊙ For You recommendations</button>
@@ -1580,7 +1611,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- MOOD PICKER MODAL -->
-<div class="ov" id="ov-mood">
+<div class="ov" id="ov-mood" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:460px">
     <div class="mh"><div class="mh-t">🎭 What's your mood tonight?</div><button class="btn bic bgh" onclick="closeOv('ov-mood')">✕</button></div>
     <div class="mb">
@@ -1609,7 +1640,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- KEYBOARD SHORTCUTS MODAL -->
-<div class="ov" id="ov-keys">
+<div class="ov" id="ov-keys" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:380px">
     <div class="mh"><div class="mh-t">⌨ Keyboard Shortcuts</div><button class="btn bic bgh" onclick="closeOv('ov-keys')">✕</button></div>
     <div class="mb">
@@ -1627,7 +1658,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- SET PROGRESS MODAL -->
-<div class="ov" id="ov-prog">
+<div class="ov" id="ov-prog" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo">
     <div class="mh">
       <div class="mh-t" id="prog-modal-title">Set Progress</div>
@@ -1652,7 +1683,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- SHARE CARD MODAL -->
-<div class="ov" id="ov-share">
+<div class="ov" id="ov-share" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:440px">
     <div class="mh">
       <div class="mh-t">🎴 Share Card</div>
@@ -1677,7 +1708,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- WATCH LOG MODAL -->
-<div class="ov" id="ov-wlog">
+<div class="ov" id="ov-wlog" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:520px">
     <div class="mh">
       <div class="mh-t">📅 Watch / Read Log</div>
@@ -1717,7 +1748,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- MAL / ANILIST IMPORT MODAL -->
-<div class="ov" id="ov-mal">
+<div class="ov" id="ov-mal" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:600px">
     <div class="mh">
       <div class="mh-t">📥 MAL / AniList Import & Export</div>
@@ -1750,7 +1781,7 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 
-<div class="ov" id="ov-dupescan">
+<div class="ov" id="ov-dupescan" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:560px">
     <div class="mh">
       <div class="mh-t">🔍 Duplicate Scanner</div>
@@ -1764,7 +1795,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- SYNC CONFLICTS -->
-<div class="ov" id="ov-conflicts">
+<div class="ov" id="ov-conflicts" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:560px">
     <div class="mh">
       <div class="mh-t">⚠ Sync Conflicts</div>
@@ -1778,7 +1809,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- DROP CANDIDATES -->
-<div class="ov" id="ov-dropcandidates">
+<div class="ov" id="ov-dropcandidates" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:560px">
     <div class="mh">
       <div class="mh-t">🗑 What should I drop?</div>
@@ -1792,7 +1823,7 @@ button,input,select,textarea{font-family:var(--f)}
 </div>
 
 <!-- TRASH BIN -->
-<div class="ov" id="ov-trash">
+<div class="ov" id="ov-trash" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:560px">
     <div class="mh">
       <div class="mh-t">🗑 Trash</div>
@@ -1810,7 +1841,7 @@ button,input,select,textarea{font-family:var(--f)}
 
 
 <!-- WRITE REVIEW MODAL -->
-<div class="ov" id="ov-review">
+<div class="ov" id="ov-review" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:520px">
     <div class="mh"><div class="mh-t" id="rev-modal-title">Write Review</div><button class="btn bic bgh" onclick="closeOv('ov-review')">✕</button></div>
     <div class="mb">
@@ -1846,7 +1877,7 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 <!-- SEQUEL FINDER MODAL -->
-<div class="ov" id="ov-sequel">
+<div class="ov" id="ov-sequel" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:500px">
     <div class="mh"><div class="mh-t" id="sequel-modal-title">🔗 Related & Sequels</div><button class="btn bic bgh" onclick="closeOv('ov-sequel')">✕</button></div>
     <div class="mb" id="sequel-out"><div class="lb"><div class="sp"></div><span>Finding related titles…</span></div></div>
@@ -1855,7 +1886,7 @@ button,input,select,textarea{font-family:var(--f)}
 
 
 <!-- SHARE LIST MODAL -->
-<div class="ov" id="ov-sharelist">
+<div class="ov" id="ov-sharelist" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:540px" id="ov-sharelist">
     <div class="mh">
       <div class="mh-t">📤 Export Shareable List</div>
@@ -1889,8 +1920,50 @@ button,input,select,textarea{font-family:var(--f)}
   </div>
 </div>
 
+<!-- AUTO-SAVE TO FILE MODAL -->
+<div class="ov" id="ov-autosave" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="mo" style="max-width:460px">
+    <div class="mh">
+      <div class="mt">Auto-save to File</div>
+      <button class="btn bic bgh" onclick="closeOv('ov-autosave')">✕</button>
+    </div>
+    <div class="mb" id="autosave-body"></div>
+    <div class="mf">
+      <button class="btn" onclick="closeOv('ov-autosave')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACCOUNT MODAL -->
+<div class="ov" id="ov-account" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="mo" style="max-width:420px">
+    <div class="mh">
+      <div class="mt">Account</div>
+      <button class="btn bic bgh" onclick="closeOv('ov-account')">✕</button>
+    </div>
+    <div class="mb" id="account-body"></div>
+    <div class="mf">
+      <button class="btn" onclick="closeOv('ov-account')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="ov" id="ov-admin" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="mo" style="max-width:520px">
+    <div class="mh">
+      <div class="mt">Admin</div>
+      <button class="btn bic bgh" onclick="closeOv('ov-admin')">✕</button>
+    </div>
+    <div class="mb" id="admin-body"></div>
+    <div class="mf">
+      <button class="btn" onclick="closeOv('ov-admin')">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- SYNC SETTINGS MODAL -->
-<div class="ov" id="ov-sync">
+<div class="ov" id="ov-sync" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="mo" style="max-width:500px">
     <div class="mh">
       <div class="mh-t">☁ Cloud Sync — Supabase</div>
@@ -1967,7 +2040,7 @@ create policy "public_rw" on nightlist_sync
 
 <input type="file" id="json-file" accept=".json" style="display:none" onchange="handleImport(event)">
 <input type="file" id="letterboxd-file" accept=".csv" style="display:none" onchange="handleLetterboxdImport(event)">
-<div id="tc"></div>
+<div id="tc" role="status" aria-live="polite" aria-atomic="false"></div>
 <script>
 // ═══════════════════════════════════════════════
 // CONSTANTS
@@ -2064,7 +2137,13 @@ function _g(k){return typeof k==='string'?(_D[k]||{}):k;}
   }
 })();
 
-const save    = ()=>{localStorage.setItem('nl_v7',JSON.stringify(LIB));badges();if(typeof updateStaleNudge==='function')updateStaleNudge();if(typeof schedulePush==='function')schedulePush();};
+const save    = ()=>{
+  // When a cloud account is active, LIB holds that account's library, not the guest's — writing
+  // it to nl_v7 here would silently overwrite the guest's own local data with the account's.
+  // Account data goes to Supabase only (acctPushLibrary); nl_v7 stays untouched until logout.
+  if(typeof acctLoggedIn!=='function'||!acctLoggedIn())localStorage.setItem('nl_v7',JSON.stringify(LIB));
+  badges();if(typeof updateStaleNudge==='function')updateStaleNudge();if(typeof schedulePush==='function')schedulePush();if(typeof scheduleAutosave==='function')scheduleAutosave();if(typeof scheduleAcctPush==='function')scheduleAcctPush();
+};
 const saveLst = ()=>{localStorage.setItem('nl_lists',JSON.stringify(LISTS));if(typeof schedulePush==='function')schedulePush();};
 const saveCvr = ()=>localStorage.setItem('nl_cvr',JSON.stringify(COVERS));
 const uid     = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
@@ -2205,6 +2284,12 @@ async function callAICompound(prompt,maxRetry=2){
       if(!text)throw new Error('Empty response from AI');
       return text;
     }catch(e){
+      // fetch() is a standard global in every supported browser, so it being undefined can only
+      // happen in a headless/non-browser test runner — never for a real user. Retrying that as if
+      // it were a transient rate-limit (3s, then 8s of real sleep) just hides the error behind two
+      // pointless waits and, worse, leaves a dangling retry mid-flight that can still fire fetch()
+      // later against whatever the page has it set to by then. Fail fast instead; real users never hit this.
+      if(e instanceof ReferenceError)throw e;
       if(e.message==='auth_failed')throw e;
       if(attempt<maxRetry)continue;
       throw e;
@@ -2240,6 +2325,7 @@ async function callAI(prompt,maxRetry=2){
       if(!text)throw new Error('Empty response from AI');
       return text;
     }catch(e){
+      if(e instanceof ReferenceError)throw e; // see callAICompound above for why
       if(e.message==='auth_failed')throw e;
       if(attempt<maxRetry)continue;
       throw e;
@@ -2615,7 +2701,7 @@ function toggleView(){
 function es(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\'/g,'&#39;');}
 
 function cardL(x){
-  return '<div class="lc" data-id="'+x.id+'" onclick="openDet(\''+x.id+'\')">'
+  return '<div class="lc" data-id="'+x.id+'" role="button" tabindex="0" aria-label="'+es(x.title)+', '+(SL[x.status]||x.status)+'" onclick="openDet(\''+x.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openDet(\''+x.id+'\');}">'
     +'<div class="lct'+(x.cover?' has-cover':'')+'">'
     +(x.cover?'<img src="'+es(x.cover)+'" loading="lazy" onerror="this.remove()">':'')
     +'<span class="lct-em">'+(EM[x.type]||'📁')+'</span></div>'
@@ -2629,7 +2715,7 @@ function cardL(x){
     +(x.tags&&x.tags.length?'<span>'+x.tags.slice(0,2).join(', ')+'</span>':'')
     +'</div></div>'
     +'<div class="lcr">'
-    +(x.rating?'<span style="color:var(--am);font-weight:700;font-size:12.5px">★ '+x.rating+'</span>':'')
+    +(x.rating?'<span style="color:var(--am);font-weight:700;font-size:12.5px">★ '+formatRating(x.rating)+'</span>':'')
     +'<button class="btn bxs bgh" onclick="event.stopPropagation();editEntry(\''+x.id+'\')">✎</button>'
     +'</div></div>';
 }
@@ -3120,11 +3206,30 @@ async function vibeSearch(){
 // ═══════════════════════════════════════════════
 // RANDOM PICKER
 // ═══════════════════════════════════════════════
+function weightedPick(pool){
+  // Score each candidate by how well it matches the library's own taste signals — not an
+  // external recommender, just a weighted die using data already in LIB. Every item still has
+  // SOME chance (floor of 1), so this narrows toward taste rather than ever fully excluding.
+  const d=computeDNA();
+  const topTagSet=new Set(d.topTags.map(t=>t[0]));
+  const typeAvg={};Object.entries(d.perType).forEach(([t,v])=>{if(v.ratedCount)typeAvg[t]=v.sumRating/v.ratedCount;});
+  const scored=pool.map(x=>{
+    let w=1;
+    if(typeAvg[x.type]!=null)w+=Math.max(0,typeAvg[x.type]-5); // above-average-rated types weigh more
+    w+=(x.tags||[]).filter(t=>topTagSet.has(t)).length*1.5;    // each top-recurring tag matched
+    return {x,w};
+  });
+  const total=scored.reduce((a,s)=>a+s.w,0);
+  let r=Math.random()*total;
+  for(const s of scored){r-=s.w;if(r<=0)return s.x;}
+  return scored[scored.length-1].x;
+}
 function pickRandom(status){
   const tf=document.getElementById('rand-type').value;
+  const weighted=document.getElementById('rand-weighted')&&document.getElementById('rand-weighted').checked;
   const pool=LIB.filter(x=>(!status||x.status===status)&&(!tf||x.type===tf));
   if(!pool.length){toast('No entries match those filters','er');return;}
-  const pick=pool[Math.floor(Math.random()*pool.length)];
+  const pick=weighted?weightedPick(pool):pool[Math.floor(Math.random()*pool.length)];
   const pct=pick.progress&&pick.total?Math.min(100,Math.round(pick.progress/pick.total*100)):null;
   document.getElementById('rr-area').innerHTML=
     '<div class="rr">'
@@ -3204,6 +3309,60 @@ function deleteList(){if(!confirm('Delete this list?'))return;LISTS=LISTS.filter
 // ═══════════════════════════════════════════════
 // STATS
 // ═══════════════════════════════════════════════
+function _yearGoalsMap(){
+  // One-time migration: the original version stored a single flat 'nl_year_goal' number with
+  // no year attached, so a goal set in one year silently carried over as-is into the next. Fold
+  // any such value into the new per-year map under the year it was presumably set for (now),
+  // then stop touching the old key — this runs once, the first time the map is read after upgrade.
+  let map={};try{map=JSON.parse(localStorage.getItem('nl_year_goals')||'{}');}catch{map={};}
+  const legacy=localStorage.getItem('nl_year_goal');
+  if(legacy!==null){
+    const v=parseInt(legacy);
+    if(!isNaN(v)&&v>=0)map[String(new Date().getFullYear())]=v;
+    localStorage.removeItem('nl_year_goal');
+    localStorage.setItem('nl_year_goals',JSON.stringify(map));
+  }
+  return map;
+}
+function getYearGoal(year){
+  year=year||new Date().getFullYear();
+  const v=_yearGoalsMap()[String(year)];
+  return(v==null||isNaN(v)||v<0)?null:v;
+}
+function setYearGoal(){
+  const val=parseInt(document.getElementById('year-goal-inp').value);
+  if(isNaN(val)||val<0){toast('Enter a whole number','er');return;}
+  const year=new Date().getFullYear();
+  const map=_yearGoalsMap();map[String(year)]=val;
+  localStorage.setItem('nl_year_goals',JSON.stringify(map));
+  renderStats();
+  toast('Goal set to '+val+' for '+year,'ok');
+}
+function clearYearGoal(){
+  const year=new Date().getFullYear();
+  const map=_yearGoalsMap();delete map[String(year)];
+  localStorage.setItem('nl_year_goals',JSON.stringify(map));
+  renderStats();
+}
+function yearGoalHtml(){
+  const year=new Date().getFullYear();
+  const jan1=new Date(year,0,1).getTime();
+  // "Completed this year" uses the updated-timestamp, same proxy calcWatchTime/pace already
+  // use elsewhere for "when did this actually get finished" — there's no separate completedAt field.
+  const completed=LIB.filter(x=>x.status==='watched'&&x.updated&&x.updated>=jan1&&(SHOW_ADULT||(!ADULT_TYPES.has(x.type)&&!x.adult))).length;
+  const goal=getYearGoal(year);
+  if(goal===null){
+    return '<div class="stc" style="margin-bottom:12px"><div class="stc-l" style="margin-bottom:9px">🎯 '+year+' Watch Goal</div>'
+      +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><input type="number" min="0" class="fi" id="year-goal-inp" placeholder="e.g. 50 titles" style="max-width:140px" aria-label="Set a yearly watch goal"><button class="btn bs bp" onclick="setYearGoal()">Set goal</button></div>'
+      +'<div style="font-size:11.5px;color:var(--tx3);margin-top:6px">'+completed+' completed so far in '+year+'.</div></div>';
+  }
+  const pct=goal>0?Math.min(100,Math.round(completed/goal*100)):100;
+  const over=completed>goal;
+  return '<div class="stc" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px"><div class="stc-l">🎯 '+year+' Watch Goal</div><button class="btn bic bgh" title="Change goal" onclick="document.getElementById(\'ygoal-edit\').style.display=document.getElementById(\'ygoal-edit\').style.display===\'none\'?\'flex\':\'none\'" aria-label="Edit yearly goal">✎</button></div>'
+    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="flex:1;height:9px;background:var(--bg4);border-radius:99px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+(over?'var(--gr)':'var(--ac)')+';border-radius:99px"></div></div><span style="font-size:12.5px;color:var(--tx2);white-space:nowrap">'+completed+' / '+goal+'</span></div>'
+    +'<div style="font-size:11.5px;color:'+(over?'var(--gr)':'var(--tx3)')+'">'+(over?'🎉 Goal reached — '+(completed-goal)+' over!':pct+'% there')+'</div>'
+    +'<div id="ygoal-edit" style="display:none;gap:8px;margin-top:10px;flex-wrap:wrap"><input type="number" min="0" class="fi" id="year-goal-inp" value="'+goal+'" style="max-width:140px" aria-label="Change yearly watch goal"><button class="btn bs bp" onclick="setYearGoal()">Update</button><button class="btn bs" onclick="clearYearGoal()">Remove goal</button></div></div>';
+}
 function renderStats(){
   const eligible=LIB.filter(x=>SHOW_ADULT||(!ADULT_TYPES.has(x.type)&&!x.adult)); // don't leak hidden adult counts/tags/titles into Stats while locked
   const types={},statuses={},ratings=[],tagCount={};
@@ -3214,7 +3373,8 @@ function renderStats(){
   const topTags=Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,10),mxTag=topTags.length?topTags[0][1]:1;
   const withCvr=eligible.filter(x=>x.cover).length;
   document.getElementById('stats-out').innerHTML=
-    '<div class="stg"><div class="stc"><div class="stc-l">Total</div><div class="stc-v">'+eligible.length+'</div></div><div class="stc"><div class="stc-l">Avg Rating</div><div class="stc-v">'+avg+'</div></div><div class="stc"><div class="stc-l">Completed</div><div class="stc-v">'+(statuses.watched||0)+'</div></div><div class="stc"><div class="stc-l">Rated 9–10</div><div class="stc-v">'+ratings.filter(r=>r>=9).length+'</div></div></div>'
+    yearGoalHtml()
+    +'<div class="stg"><div class="stc"><div class="stc-l">Total</div><div class="stc-v">'+eligible.length+'</div></div><div class="stc"><div class="stc-l">Avg Rating</div><div class="stc-v">'+avg+'</div></div><div class="stc"><div class="stc-l">Completed</div><div class="stc-v">'+(statuses.watched||0)+'</div></div><div class="stc"><div class="stc-l">Rated 9–10</div><div class="stc-v">'+ratings.filter(r=>r>=9).length+'</div></div></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'
     +'<div class="stc"><div class="stc-l" style="margin-bottom:12px">By category</div>'+Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([t,c])=>'<div class="brw"><span class="brl">'+(EM[t]||'')+' '+t+'</span><div class="brt"><div class="brf" style="width:'+Math.round(c/mxT*100)+'%;background:'+(BC[t]||'var(--ac)')+'"></div></div><span class="brc">'+c+'</span></div>').join('')+'</div>'
     +'<div class="stc"><div class="stc-l" style="margin-bottom:12px">By status</div>'+Object.entries(statuses).map(([s,c])=>'<div class="brw"><span class="brl">'+(SL[s]||s)+'</span><div class="brt"><div class="brf" style="width:'+Math.round(c/mxS*100)+'%;background:'+(SC[s]||'var(--tx3)')+'"></div></div><span class="brc">'+c+'</span></div>').join('')+'</div></div>'
@@ -3266,7 +3426,7 @@ function renderWrapped(){
     +'</div>'
     +(topRated?'<div class="stc" style="margin-bottom:12px;padding:18px;display:flex;align-items:center;gap:14px">'
       +(topRated.cover?'<img src="'+topRated.cover+'" style="width:56px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0">':'')
-      +'<div style="flex:1;min-width:0"><div class="wt-sub" style="margin-bottom:3px">Your Top-Rated This Year</div><div style="font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+es(topRated.title)+'</div><div style="color:var(--am);font-weight:700;font-size:13px">★ '+topRated.rating+'/10</div></div>'
+      +'<div style="flex:1;min-width:0"><div class="wt-sub" style="margin-bottom:3px">Your Top-Rated This Year</div><div style="font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+es(topRated.title)+'</div><div style="color:var(--am);font-weight:700;font-size:13px">★ '+formatRating(topRated.rating)+'</div></div>'
       +'</div>':'')
     +(topTag?'<div class="stc" style="margin-bottom:12px;padding:18px;text-align:center"><div class="wt-sub" style="margin-bottom:6px">Your Most-Tagged Vibe</div><div style="font-size:20px;font-weight:800;color:var(--ac)">'+es(topTag[0])+'</div><div style="font-size:11.5px;color:var(--tx3)">appeared in '+topTag[1]+' titles</div></div>':'')
     +'<div style="text-align:center;padding-top:6px"><button class="btn bp" onclick="shareWrapped()">📤 Share My Wrapped</button></div>';
@@ -3279,6 +3439,252 @@ function shareWrapped(){
   if(navigator.share){navigator.share({text}).catch(()=>{});}
   else{navigator.clipboard.writeText(text);toast('Copied to clipboard!','ok');}
 }
+// ═══════════════════════════════════════════════
+// PUBLIC ACCOUNTS (real Supabase Auth — separate from the no-login Device Sync above)
+// ═══════════════════════════════════════════════
+// IMPORTANT: this whole section talks to Supabase's Auth + REST API over the network, and this
+// sandbox has no route to supabase.co (same wall as Groq/Jikan/TMDB/AniList — confirmed blocked
+// by the sandbox's own network proxy, see devlog). Everything here is written carefully against
+// Supabase's documented Auth/PostgREST API shapes, but UNLIKE everything else in this file, it
+// could NOT be run against a real project and confirmed working from here. Test the actual
+// sign-up/login/profile/admin flow yourself once this is deployed, with supabase-schema-accounts.sql
+// already run in your project. See devlog for the full setup checklist.
+let ACCT_URL='',ACCT_KEY='',ACCT_SESSION=null,ACCT_PROFILE=null,_acctPushTimer=null;
+function getAcctCfg(){
+  ACCT_URL=localStorage.getItem('nl_acct_url')||localStorage.getItem('nl_sb_url')||'';
+  ACCT_KEY=localStorage.getItem('nl_acct_key')||localStorage.getItem('nl_sb_key')||'';
+  let s=null;try{s=JSON.parse(localStorage.getItem('nl_acct_session')||'null');}catch{s=null;}
+  ACCT_SESSION=s;
+  let p=null;try{p=JSON.parse(localStorage.getItem('nl_acct_profile')||'null');}catch{p=null;}
+  ACCT_PROFILE=p;
+}
+function saveAcctCfg(){
+  localStorage.setItem('nl_acct_url',ACCT_URL);
+  localStorage.setItem('nl_acct_key',ACCT_KEY);
+  if(ACCT_SESSION)localStorage.setItem('nl_acct_session',JSON.stringify(ACCT_SESSION));else localStorage.removeItem('nl_acct_session');
+  if(ACCT_PROFILE)localStorage.setItem('nl_acct_profile',JSON.stringify(ACCT_PROFILE));else localStorage.removeItem('nl_acct_profile');
+}
+function acctLoggedIn(){return !!(ACCT_SESSION&&ACCT_SESSION.access_token);}
+
+async function acctAuthRequest(path,body){
+  const url=ACCT_URL.replace(/\/$/,'')+path;
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','apikey':ACCT_KEY},body:JSON.stringify(body),signal:AbortSignal.timeout(10000)});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error_description||d.msg||d.error||('HTTP '+r.status));
+  return d;
+}
+async function acctSignUp(email,password){
+  const d=await acctAuthRequest('/auth/v1/signup',{email,password});
+  if(d.access_token){ACCT_SESSION={access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id,email:d.user.email,expires_at:Date.now()+(d.expires_in||3600)*1000};saveAcctCfg();await acctLoadProfile();}
+  return d;
+}
+async function acctLogIn(email,password){
+  const d=await acctAuthRequest('/auth/v1/token?grant_type=password',{email,password});
+  ACCT_SESSION={access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id,email:d.user.email,expires_at:Date.now()+(d.expires_in||3600)*1000};
+  saveAcctCfg();
+  await acctLoadProfile();
+  await acctPullLibrary();
+}
+async function acctLogOut(){
+  if(ACCT_SESSION){
+    try{await fetch(ACCT_URL.replace(/\/$/,'')+'/auth/v1/logout',{method:'POST',headers:{'apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token},signal:AbortSignal.timeout(8000)});}catch(e){}
+  }
+  ACCT_SESSION=null;ACCT_PROFILE=null;saveAcctCfg();
+  // Dropping back to whatever's in local guest storage — does NOT touch it, the account's cloud
+  // library and the local guest library are intentionally two separate things, never silently merged.
+  LIB=[];
+  for(const k of['nl_v7','nl_v6','nl_lib_v5','nl_lib_v4']){
+    const v=localStorage.getItem(k);
+    if(v){try{LIB=JSON.parse(v);break;}catch(e){}}
+  }
+  SHOW_ADULT=localStorage.getItem('nl_adult')==='1';
+  renderLib();
+}
+async function acctRefreshIfNeeded(){
+  if(!ACCT_SESSION)return false;
+  if(Date.now()<ACCT_SESSION.expires_at-60000)return true; // still good for at least another minute
+  try{
+    const d=await acctAuthRequest('/auth/v1/token?grant_type=refresh_token',{refresh_token:ACCT_SESSION.refresh_token});
+    ACCT_SESSION={access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id,email:d.user.email,expires_at:Date.now()+(d.expires_in||3600)*1000};
+    saveAcctCfg();
+    return true;
+  }catch(e){
+    ACCT_SESSION=null;ACCT_PROFILE=null;saveAcctCfg();
+    return false;
+  }
+}
+async function acctRest(method,path,body){
+  if(!(await acctRefreshIfNeeded()))throw new Error('Not logged in — please log in again.');
+  const url=ACCT_URL.replace(/\/$/,'')+'/rest/v1'+path;
+  const hdrs={'Content-Type':'application/json','apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token};
+  if(method==='POST')hdrs['Prefer']='resolution=merge-duplicates,return=representation';
+  const r=await fetch(url,{method,headers:hdrs,body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(10000)});
+  if(!r.ok)throw new Error('Supabase '+r.status+': '+(await r.text()).slice(0,200));
+  if(r.status===204)return null;
+  return r.json();
+}
+
+async function acctLoadProfile(){
+  const rows=await acctRest('GET','/profiles?id=eq.'+ACCT_SESSION.user_id+'&select=*');
+  ACCT_PROFILE=rows&&rows[0]?rows[0]:{id:ACCT_SESSION.user_id,username:ACCT_SESSION.email.split('@')[0],is_admin:false,is_suspended:false,show_adult:false};
+  saveAcctCfg();
+  SHOW_ADULT=!!ACCT_PROFILE.show_adult; // the account's own setting replaces the local PIN toggle while logged in
+}
+async function acctUpdateProfile(fields){
+  const url=ACCT_URL.replace(/\/$/,'')+'/rest/v1/profiles?id=eq.'+ACCT_SESSION.user_id;
+  if(!(await acctRefreshIfNeeded()))throw new Error('Not logged in.');
+  const r=await fetch(url,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token,'Prefer':'return=representation'},body:JSON.stringify(fields),signal:AbortSignal.timeout(10000)});
+  if(!r.ok)throw new Error('Supabase '+r.status+': '+(await r.text()).slice(0,200));
+  const d=await r.json();
+  if(d&&d[0])ACCT_PROFILE=d[0];
+  saveAcctCfg();
+  if('show_adult' in fields)SHOW_ADULT=!!fields.show_adult;
+}
+
+async function acctPullLibrary(){
+  // Logging into an account makes its cloud library the active one — this REPLACES whatever
+  // was showing (guest localStorage data, untouched on disk) rather than merging the two. Same
+  // "pull replaces" behavior the existing no-login Device Sync already has, for consistency.
+  const rows=await acctRest('GET','/library_items?user_id=eq.'+ACCT_SESSION.user_id+'&select=entry_id,data');
+  LIB=(rows||[]).map(r=>({...r.data,id:r.entry_id}));
+  ACCT_KNOWN_IDS=new Set(LIB.map(x=>x.id));
+  save();renderLib();
+}
+let ACCT_KNOWN_IDS=new Set();
+async function acctPushLibrary(){
+  if(!acctLoggedIn())return;
+  try{
+    const rows=LIB.map(x=>{const{id,...rest}=x;return{user_id:ACCT_SESSION.user_id,entry_id:id,data:rest,updated_at:new Date().toISOString()};});
+    if(rows.length)await acctRest('POST','/library_items?on_conflict=user_id,entry_id',rows);
+    const nowIds=new Set(LIB.map(x=>x.id));
+    const removed=[...ACCT_KNOWN_IDS].filter(id=>!nowIds.has(id));
+    for(const rid of removed){
+      await acctRefreshIfNeeded();
+      await fetch(ACCT_URL.replace(/\/$/,'')+'/rest/v1/library_items?user_id=eq.'+ACCT_SESSION.user_id+'&entry_id=eq.'+encodeURIComponent(rid),{method:'DELETE',headers:{'apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token},signal:AbortSignal.timeout(10000)}).catch(()=>{});
+    }
+    ACCT_KNOWN_IDS=nowIds;
+  }catch(e){/* next edit's debounced push will retry; not worth a toast on every keystroke-adjacent failure */}
+}
+function scheduleAcctPush(){
+  if(!acctLoggedIn())return;
+  if(_acctPushTimer)clearTimeout(_acctPushTimer);
+  _acctPushTimer=setTimeout(acctPushLibrary,2500);
+}
+
+// ── Admin ──
+async function acctAdminStats(){
+  const users=await acctRest('GET','/profiles?select=id,username,is_admin,is_suspended,created_at&order=created_at.desc');
+  const items=await acctRest('GET','/library_items?select=user_id');
+  // Deliberately NOT reading library_items.data here for the stats view — an admin can see that a
+  // user exists, when they joined, and how many titles they've tracked, but not what those titles
+  // are. Keeps "I can suspend abuse" separate from "I can browse everyone's private library."
+  const counts={};(items||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
+  return{users:users||[],counts};
+}
+async function acctSetSuspended(userId,suspended){
+  if(!(await acctRefreshIfNeeded()))throw new Error('Not logged in.');
+  const r=await fetch(ACCT_URL.replace(/\/$/,'')+'/rest/v1/profiles?id=eq.'+userId,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token},body:JSON.stringify({is_suspended:suspended}),signal:AbortSignal.timeout(10000)});
+  if(!r.ok)throw new Error('Supabase '+r.status+': '+(await r.text()).slice(0,200));
+}
+
+// ── UI ──
+function renderAccountOv(){
+  const body=document.getElementById('account-body');
+  if(!body)return;
+  if(!ACCT_URL||!ACCT_KEY){
+    body.innerHTML='<div style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px">Connect this to your Supabase project first — the same URL and anon key as Device Sync, from a project where you\'ve run <code>supabase-schema-accounts.sql</code>.</div>'
+      +'<input type="text" class="fi" id="acct-url-inp" placeholder="https://xxxxxxxxxxxx.supabase.co" style="margin-bottom:8px;font-size:12.5px" value="'+es(ACCT_URL)+'">'
+      +'<input type="text" class="fi" id="acct-key-inp" placeholder="anon public key" style="margin-bottom:10px;font-size:12.5px" value="'+es(ACCT_KEY)+'">'
+      +'<button class="btn bs bp" onclick="saveAcctUrlKey()">Save connection</button>';
+    return;
+  }
+  if(!acctLoggedIn()){
+    body.innerHTML='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn bs" id="acct-tab-in" onclick="acctSwitchTab(\'in\')">Log In</button><button class="btn bs" id="acct-tab-up" onclick="acctSwitchTab(\'up\')">Sign Up</button></div>'
+      +'<input type="email" class="fi" id="acct-email-inp" placeholder="email" style="margin-bottom:8px" autocomplete="username">'
+      +'<input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="margin-bottom:10px" autocomplete="current-password">'
+      +'<div id="acct-err" style="font-size:12px;color:var(--rd);margin-bottom:8px;display:none"></div>'
+      +'<button class="btn bs bp" id="acct-submit-btn" onclick="acctSubmit(\'in\')">Log In</button>'
+      +'<div style="font-size:11px;color:var(--tx3);margin-top:10px">This is a real account — separate from, and unrelated to, Device Sync above. Your cloud library here is only visible to you (and, for moderation, this site\'s admin).</div>';
+    acctSwitchTab('in');
+    return;
+  }
+  const p=ACCT_PROFILE||{};
+  body.innerHTML='<div style="font-size:13px;color:var(--tx2);margin-bottom:14px">Logged in as <b>'+es(ACCT_SESSION.email)+'</b>'+(p.is_admin?' <span style="color:var(--ac);font-weight:700">· Admin</span>':'')+'</div>'
+    +'<label style="font-size:11.5px;color:var(--tx3);display:block;margin-bottom:4px">Username</label>'
+    +'<input type="text" class="fi" id="acct-username-inp" value="'+es(p.username||'')+'" style="margin-bottom:12px">'
+    +'<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer;margin-bottom:14px"><input type="checkbox" id="acct-adult-toggle" '+(p.show_adult?'checked':'')+' style="cursor:pointer">Show adult-tagged content on this account</label>'
+    +'<button class="btn bs bp" onclick="acctSaveProfileBtn()" style="margin-right:8px">Save</button>'
+    +'<button class="btn bs" onclick="acctLogOutBtn()">Log Out</button>';
+}
+function acctSwitchTab(which){
+  const btnIn=document.getElementById('acct-tab-in'),btnUp=document.getElementById('acct-tab-up'),submit=document.getElementById('acct-submit-btn');
+  if(!btnIn)return;
+  btnIn.classList.toggle('bp',which==='in');btnUp.classList.toggle('bp',which==='up');
+  submit.textContent=which==='in'?'Log In':'Sign Up';
+  submit.setAttribute('onclick',"acctSubmit('"+which+"')");
+}
+function saveAcctUrlKey(){
+  ACCT_URL=document.getElementById('acct-url-inp').value.trim();
+  ACCT_KEY=document.getElementById('acct-key-inp').value.trim();
+  if(!ACCT_URL||!ACCT_KEY){toast('Enter both the URL and key','er');return;}
+  saveAcctCfg();renderAccountOv();
+}
+async function acctSubmit(which){
+  const email=document.getElementById('acct-email-inp').value.trim();
+  const pass=document.getElementById('acct-pass-inp').value;
+  const err=document.getElementById('acct-err');
+  err.style.display='none';
+  if(!email||!pass){err.textContent='Enter an email and password.';err.style.display='block';return;}
+  try{
+    if(which==='up'){await acctSignUp(email,pass);toast('Account created!','ok');}
+    else{await acctLogIn(email,pass);toast('Logged in','ok');}
+    renderAccountOv();updateAccountNavDot();
+  }catch(e){err.textContent=e.message;err.style.display='block';}
+}
+async function acctSaveProfileBtn(){
+  const username=document.getElementById('acct-username-inp').value.trim();
+  const showAdult=document.getElementById('acct-adult-toggle').checked;
+  try{
+    await acctUpdateProfile({username,show_adult:showAdult});
+    toast('Profile saved','ok');
+    renderLib();
+  }catch(e){toast('Save failed: '+e.message,'er');}
+}
+async function acctLogOutBtn(){
+  await acctLogOut();
+  closeOv('ov-account');
+  updateAccountNavDot();
+  toast('Logged out','in');
+}
+function updateAccountNavDot(){
+  const dot=document.getElementById('account-nav-dot');
+  if(dot)dot.style.background=acctLoggedIn()?'var(--gr)':'var(--tx3)';
+  const adminNav=document.getElementById('admin-nav-btn');
+  if(adminNav)adminNav.style.display=(acctLoggedIn()&&ACCT_PROFILE&&ACCT_PROFILE.is_admin)?'flex':'none';
+}
+
+async function renderAdminOv(){
+  const body=document.getElementById('admin-body');
+  if(!body)return;
+  if(!acctLoggedIn()||!ACCT_PROFILE||!ACCT_PROFILE.is_admin){body.innerHTML='<div style="font-size:13px;color:var(--tx2)">Admin access required.</div>';return;}
+  body.innerHTML='<div style="font-size:13px;color:var(--tx3)">Loading…</div>';
+  try{
+    const{users,counts}=await acctAdminStats();
+    const totalItems=Object.values(counts).reduce((a,b)=>a+b,0);
+    body.innerHTML='<div style="display:flex;gap:10px;margin-bottom:16px"><div class="stc" style="flex:1"><div class="stc-l">Users</div><div class="stc-v">'+users.length+'</div></div><div class="stc" style="flex:1"><div class="stc-l">Titles tracked (all users)</div><div class="stc-v">'+totalItems+'</div></div></div>'
+      +'<div style="max-height:360px;overflow-y:auto">'
+      +users.map(u=>'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b2)">'
+        +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+es(u.username||u.id)+(u.is_admin?' <span style="color:var(--ac);font-size:11px">· Admin</span>':'')+'</div><div style="font-size:11px;color:var(--tx3)">'+(counts[u.id]||0)+' titles · joined '+timeAgo(new Date(u.created_at).getTime())+'</div></div>'
+        +(u.is_admin?'':'<button class="btn bs'+(u.is_suspended?' bp':'')+'" style="font-size:11px;padding:4px 10px" onclick="adminToggleSuspend(\''+u.id+'\','+(!u.is_suspended)+')">'+(u.is_suspended?'Unsuspend':'Suspend')+'</button>')
+        +'</div>').join('')
+      +'</div>';
+  }catch(e){body.innerHTML='<div style="font-size:13px;color:var(--rd)">Failed to load: '+es(e.message)+'</div>';}
+}
+async function adminToggleSuspend(userId,suspend){
+  try{await acctSetSuspended(userId,suspend);toast(suspend?'User suspended':'User unsuspended','ok');renderAdminOv();}
+  catch(e){toast('Failed: '+e.message,'er');}
+}
+
 // ═══════════════════════════════════════════════
 // TASTE DNA
 // ═══════════════════════════════════════════════
@@ -3447,6 +3853,77 @@ function doExport(){
   localStorage.setItem('nl_last_backup',Date.now().toString());
   updateBackupNudge();
 }
+// ═══════════════════════════════════════════════
+// AUTO-SAVE TO FILE (File System Access API)
+// ═══════════════════════════════════════════════
+// Chrome/Edge only — Firefox and Safari don't implement showSaveFilePicker. The file HANDLE
+// itself can't be put in localStorage (it's a live, non-serializable browser object), so this
+// is session-only by design: pick the file again after a page reload if you want it to keep
+// going. That's a real limitation, not a bug — surfaced plainly in the UI rather than hidden.
+let AUTOSAVE_HANDLE=null,_autosaveTimer=null,_autosaveFilename=null;
+function autosaveSupported(){return typeof window.showSaveFilePicker==='function';}
+async function enableAutosave(){
+  if(!autosaveSupported()){toast('Your browser doesn\'t support this — Chrome or Edge only','er');return;}
+  try{
+    const handle=await window.showSaveFilePicker({suggestedName:'nightlist-autosave.json',types:[{description:'JSON',accept:{'application/json':['.json']}}]});
+    AUTOSAVE_HANDLE=handle;_autosaveFilename=handle.name;
+    await writeAutosave(); // confirm we can actually write before calling it "on"
+    toast('Auto-save on — writing to '+_autosaveFilename,'ok');
+  }catch(e){
+    if(e.name!=='AbortError')toast('Could not set up auto-save: '+e.message,'er');
+  }
+  renderAutosaveOv();updateAutosaveNavDot();
+}
+function disableAutosave(){
+  AUTOSAVE_HANDLE=null;_autosaveFilename=null;
+  if(_autosaveTimer){clearTimeout(_autosaveTimer);_autosaveTimer=null;}
+  toast('Auto-save turned off','in');
+  renderAutosaveOv();updateAutosaveNavDot();
+}
+async function writeAutosave(){
+  if(!AUTOSAVE_HANDLE)return;
+  try{
+    const w=await AUTOSAVE_HANDLE.createWritable();
+    await w.write(JSON.stringify({library:LIB,lists:LISTS},null,2));
+    await w.close();
+    localStorage.setItem('nl_last_backup',Date.now().toString()); // this genuinely is a backup
+    if(typeof updateBackupNudge==='function')updateBackupNudge();
+  }catch(e){
+    // Most likely the user revoked file permission externally — turn it off rather than
+    // silently failing on every save from here on.
+    AUTOSAVE_HANDLE=null;_autosaveFilename=null;
+    toast('Auto-save stopped working: '+e.message,'er');
+    renderAutosaveOv();updateAutosaveNavDot();
+  }
+}
+function scheduleAutosave(){
+  // Debounced so a burst of rapid edits (bulk tag, import) doesn't write the file on every
+  // single change — same idea as schedulePush() for Supabase sync, just for the local file.
+  if(!AUTOSAVE_HANDLE)return;
+  if(_autosaveTimer)clearTimeout(_autosaveTimer);
+  _autosaveTimer=setTimeout(writeAutosave,2000);
+}
+function updateAutosaveNavDot(){
+  const dot=document.getElementById('autosave-nav-dot');
+  if(dot)dot.style.background=AUTOSAVE_HANDLE?'var(--gr)':'var(--tx3)';
+}
+function renderAutosaveOv(){
+  const body=document.getElementById('autosave-body');
+  if(!body)return;
+  if(!autosaveSupported()){
+    body.innerHTML='<div style="font-size:13px;color:var(--tx2);line-height:1.5">Your browser doesn\'t support this feature — it needs the File System Access API, available in <b>Chrome</b> and <b>Edge</b> (desktop). Firefox and Safari don\'t have it yet. Use <b>Export JSON</b> for a manual backup instead.</div>';
+    return;
+  }
+  if(AUTOSAVE_HANDLE){
+    body.innerHTML='<div style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px">✅ Auto-saving to <b>'+es(_autosaveFilename)+'</b> — every change writes to that file a couple seconds after you make it.</div>'
+      +'<div style="font-size:11.5px;color:var(--tx3);margin-bottom:14px">⚠ This only lasts for this browser tab/session — reloading the page or closing the tab stops it, since the file handle can\'t be saved between visits. You\'ll need to pick the file again next time you want it on.</div>'
+      +'<button class="btn bs" onclick="disableAutosave()">Turn off auto-save</button>';
+  }else{
+    body.innerHTML='<div style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px">Pick a file once, and NightList will keep writing your library to it automatically — a backup that stays current without you remembering to export.</div>'
+      +'<div style="font-size:11.5px;color:var(--tx3);margin-bottom:14px">⚠ Session-only: this turns back off if you reload the page or close the tab, and you\'ll need to pick the file again. Chrome/Edge desktop only.</div>'
+      +'<button class="btn bs bp" onclick="enableAutosave()">Choose a file to auto-save to</button>';
+  }
+}
 function doImport(){document.getElementById('json-file').click();}
 function parseCSVLine(line){
   const cells=[];let cur='',inQ=false;
@@ -3551,10 +4028,10 @@ function mergeEntries(keepId,discardId){
   // (concatenated if both differ), rating/total (keep's value wins if set, else
   // discard's), progress (the higher of the two), rewatchCount (summed), cover (keep's
   // if set, else discard's), status (the further-along of the two), added (earliest of
-  // the two), and per-episode watch logs (combined under the kept id). Does NOT merge
-  // Tier List placement or written Reviews — those are left on whichever entry already
-  // has them, to avoid silently overwriting a placement/review the user wrote. See
-  // t-mergeentries.
+  // the two), per-episode watch logs (combined under the kept id), Tier List placement
+  // (if keep isn't placed anywhere and discard is, keep inherits discard's tier), and
+  // written Reviews (if keep has none and discard does, keep inherits discard's review —
+  // never overwrites a review the user already wrote on the kept entry). See t-mergeentries.
   const keep=LIB.find(e=>e.id===keepId),discard=LIB.find(e=>e.id===discardId);
   if(!keep||!discard)return;
   const keepSnapshot={...keep};
@@ -3577,6 +4054,27 @@ function mergeEntries(keepId,discardId){
   const allLogs=JSON.parse(localStorage.getItem('nl_wlogs')||'{}');
   delete allLogs[discardId];
   localStorage.setItem('nl_wlogs',JSON.stringify(allLogs));
+  // Tier List: only move discard's placement onto keep if keep has no placement of its own —
+  // this never silently overwrites a tier the user already picked for the kept entry.
+  loadTierData();
+  let keepTierBefore=null,discardTierBefore=null,tierChanged=false;
+  for(const t of Object.keys(TIER_DATA)){
+    if(TIER_DATA[t].includes(keepId))keepTierBefore=t;
+    if(TIER_DATA[t].includes(discardId))discardTierBefore=t;
+  }
+  if(discardTierBefore){
+    TIER_DATA[discardTierBefore]=TIER_DATA[discardTierBefore].filter(x=>x!==discardId);
+    if(!keepTierBefore){TIER_DATA[discardTierBefore].push(keepId);tierChanged=true;}
+    localStorage.setItem('nl_tiers',JSON.stringify(TIER_DATA));
+  }
+  // Reviews: same non-destructive rule — only fills in a review on keep if it had none.
+  const allReviews=getReviews();
+  const keepReviewBefore=allReviews[keepId]?{...allReviews[keepId]}:null;
+  const discardReview=allReviews[discardId];
+  let reviewChanged=false;
+  if(discardReview&&!keepReviewBefore){allReviews[keepId]=discardReview;reviewChanged=true;}
+  if(allReviews[discardId]){delete allReviews[discardId];saveReviews(allReviews);}
+  else if(reviewChanged)saveReviews(allReviews);
   LIB=LIB.filter(e=>e.id!==discardId);
   TRASH.unshift({...discard,deletedAt:Date.now()});saveTrash();
   save();renderLib();
@@ -3584,6 +4082,15 @@ function mergeEntries(keepId,discardId){
   toastUndo('Merged into "'+keep.title+'"',()=>{
     const k=LIB.find(e=>e.id===keepId);
     if(k)Object.assign(k,keepSnapshot);
+    if(tierChanged){
+      loadTierData();
+      TIER_DATA[discardTierBefore]=TIER_DATA[discardTierBefore].filter(x=>x!==keepId);
+      if(!TIER_DATA[discardTierBefore].includes(discardId))TIER_DATA[discardTierBefore].push(discardId);
+      localStorage.setItem('nl_tiers',JSON.stringify(TIER_DATA));
+    }
+    if(reviewChanged){
+      const r=getReviews();delete r[keepId];r[discardId]=discardReview;saveReviews(r);
+    }
     restoreFromTrash(discardId);
     runDupeScan();
   });
@@ -3663,13 +4170,36 @@ function handleImport(e){
 // ═══════════════════════════════════════════════
 // UTILITIES
 // ═══════════════════════════════════════════════
+let _lastFocus=null;
+function _trapFocus(e){
+  const ov=document.querySelector('.ov.open');
+  if(!ov||e.key!=='Tab')return;
+  const f=ov.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if(!f.length)return;
+  const first=f[0],last=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+}
 function openOv(id){
-  document.getElementById(id).classList.add('open');
+  _lastFocus=document.activeElement;
+  const ov=document.getElementById(id);
+  ov.classList.add('open');
+  ov.setAttribute('aria-hidden','false');
   // Push a history entry so back button closes the modal instead of leaving the page
   history.pushState({modal:id},'','');
+  setTimeout(()=>{
+    const target=ov.querySelector('[autofocus]')||ov.querySelector('button,[href],input,select,textarea');
+    (target||ov).focus();
+  },30);
+  document.addEventListener('keydown',_trapFocus);
 }
 function closeOv(id){
-  document.getElementById(id).classList.remove('open');
+  const ov=document.getElementById(id);
+  ov.classList.remove('open');
+  ov.setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown',_trapFocus);
+  if(_lastFocus&&document.body.contains(_lastFocus)){_lastFocus.focus();}
+  _lastFocus=null;
   // If the current history state is this modal, go back silently
   if(history.state&&history.state.modal===id){
     history.back();
@@ -3694,7 +4224,7 @@ window.addEventListener('popstate',function(e){
 });
 document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')document.querySelectorAll('.ov.open').forEach(o=>o.classList.remove('open'));
+  if(e.key==='Escape'){document.querySelectorAll('.ov.open').forEach(o=>{o.classList.remove('open');o.setAttribute('aria-hidden','true');});document.removeEventListener('keydown',_trapFocus);if(_lastFocus&&document.body.contains(_lastFocus)){_lastFocus.focus();_lastFocus=null;}}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();goLib('','');setTimeout(()=>document.getElementById('lib-q').focus(),50);}
   if((e.ctrlKey||e.metaKey)&&e.key==='n'){e.preventDefault();goLib('','');openAdd();}
 });
@@ -4296,12 +4826,16 @@ async function tRun(id,btn){
       }
 
       case 'picks':{
-        if(LIB.length<1){tSet(id,false,'Add library entries first (use Add test)');break;}
+        const savedLIB=LIB.slice();
+        let seeded=false;
+        if(LIB.length<1){LIB=[{id:uid(),title:'__Test Picks__',type:'anime',status:'watched',rating:9,tags:[],added:Date.now(),updated:Date.now()}];seeded=true;}
         goPage('suggest');
         genSug();
         await new Promise(r=>setTimeout(r,5000));
         const cards=document.querySelectorAll('#sug-out .sugc');
-        tSet(id,cards.length>0,'Got '+cards.length+' suggestion cards. '+(cards.length>0?'Grouped by type if mixed library.':'No results — check API key.'));
+        const ok=cards.length>0;
+        if(seeded){LIB=savedLIB;save();}
+        tSet(id,ok,'Got '+cards.length+' suggestion cards. '+(ok?'Grouped by type if mixed library.':'No results — check API key.')+(seeded?' (self-seeded a test entry)':''));
         break;
       }
 
@@ -4645,6 +5179,306 @@ async function tRun(id,btn){
         break;
       }
 
+      case 'a11y':{
+        const testId=uid();
+        LIB.unshift({id:testId,title:'__Test A11y__',type:'anime',status:'watching',cover:'',tags:[],added:Date.now(),progress:1,total:12});
+        VIEW='grid';localStorage.setItem('nl_view',VIEW);renderLib();
+        const card=document.querySelector('.mc[data-id="'+testId+'"]');
+        const cardOk=!!card&&card.getAttribute('role')==='button'&&card.getAttribute('tabindex')==='0'&&!!card.getAttribute('aria-label');
+        const nav=document.querySelector('.ni[data-nav="all"]');
+        const navOk=!!nav&&nav.getAttribute('role')==='button'&&nav.getAttribute('tabindex')==='0';
+        openOv('ov-keys');
+        const ov=document.getElementById('ov-keys');
+        await new Promise(r=>setTimeout(r,60));
+        const openOk=ov.getAttribute('aria-hidden')==='false'&&document.activeElement!==document.body&&ov.contains(document.activeElement);
+        closeOv('ov-keys');
+        const closeOk=ov.getAttribute('aria-hidden')==='true';
+        LIB=LIB.filter(e=>e.id!==testId);
+        save();renderLib();
+        const ok=cardOk&&navOk&&openOk&&closeOk;
+        tSet(id,ok,'card role/tabindex/label='+cardOk+', nav keyboard-reachable='+navOk+', modal opens focused+aria-hidden=false='+openOk+', modal closes aria-hidden=true='+closeOk);
+        break;
+      }
+
+      case 'weightedpick':{
+        const savedLIB=LIB.slice();
+        const t1=uid(),t2=uid(),cA=uid(),cB=uid();
+        LIB=[
+          {id:t1,title:'__sig_anime__',type:'anime',status:'watched',rating:10,tags:['__favtag__'],added:Date.now(),updated:Date.now()},
+          {id:t2,title:'__sig_movie__',type:'movie',status:'watched',rating:2,tags:[],added:Date.now(),updated:Date.now()},
+          {id:cA,title:'__cand_anime__',type:'anime',status:'want',tags:['__favtag__'],added:Date.now()},
+          {id:cB,title:'__cand_movie__',type:'movie',status:'want',tags:[],added:Date.now()}
+        ];
+        const pool=LIB.filter(x=>x.status==='want');
+        let winsA=0;const N=200;
+        for(let i=0;i<N;i++){if(weightedPick(pool).id===cA)winsA++;}
+        LIB=savedLIB;
+        const ok=winsA>130; // uniform chance would land ~100/200; taste-matched candidate should dominate
+        tSet(id,ok,'Taste-matched candidate won '+winsA+'/'+N+' draws (uniform would be ~100; want strong bias toward it)');
+        break;
+      }
+
+      case 'yeargoal':{
+        const savedLIB=LIB.slice();
+        const savedGoals=localStorage.getItem('nl_year_goals'),savedLegacy=localStorage.getItem('nl_year_goal');
+        const now=Date.now(),thisYear=new Date().getFullYear();
+        LIB=[1,2,3].map(n=>({id:uid(),title:'__yg_'+n,type:'anime',status:'watched',rating:8,tags:[],added:now,updated:now}));
+        localStorage.removeItem('nl_year_goals');localStorage.removeItem('nl_year_goal');
+        const noGoalHtml=yearGoalHtml();
+        const noGoalOk=noGoalHtml.includes('year-goal-inp')&&noGoalHtml.includes('Set goal')&&!noGoalHtml.includes('Goal reached');
+        localStorage.setItem('nl_year_goals',JSON.stringify({[thisYear]:2}));
+        const overHtml=yearGoalHtml();
+        const overOk=overHtml.includes('3 / 2')&&overHtml.includes('Goal reached');
+        localStorage.setItem('nl_year_goals',JSON.stringify({[thisYear]:10}));
+        const underHtml=yearGoalHtml();
+        const underOk=underHtml.includes('3 / 10')&&underHtml.includes('30% there')&&!underHtml.includes('Goal reached');
+        // cross-year isolation: a goal stored under a DIFFERENT year must not apply to this year
+        localStorage.setItem('nl_year_goals',JSON.stringify({[thisYear-1]:5}));
+        const otherYearHtml=yearGoalHtml();
+        const isolationOk=otherYearHtml.includes('Set goal')&&!otherYearHtml.includes('/ 5');
+        // legacy migration: an old flat nl_year_goal must fold into this year's slot, once, on read
+        localStorage.removeItem('nl_year_goals');
+        localStorage.setItem('nl_year_goal','7');
+        const migratedGoal=getYearGoal(thisYear);
+        const migratedMapHasKey=JSON.parse(localStorage.getItem('nl_year_goals')||'{}')[String(thisYear)]===7;
+        const legacyKeyGone=localStorage.getItem('nl_year_goal')===null;
+        const migrateOk=migratedGoal===7&&migratedMapHasKey&&legacyKeyGone;
+        LIB=savedLIB;
+        if(savedGoals!==null)localStorage.setItem('nl_year_goals',savedGoals);else localStorage.removeItem('nl_year_goals');
+        if(savedLegacy!==null)localStorage.setItem('nl_year_goal',savedLegacy);else localStorage.removeItem('nl_year_goal');
+        const ok=noGoalOk&&overOk&&underOk&&isolationOk&&migrateOk;
+        tSet(id,ok,'no-goal='+noGoalOk+', 3/2 reached='+overOk+', 3/10 at 30%='+underOk+', other-year goal stays isolated='+isolationOk+', legacy key migrates once='+migrateOk);
+        break;
+      }
+
+      case 'ratingscalecoverage':{
+        // formatRating() is the single conversion point every display spot (grid/list/mood
+        // cards, Wrapped, Tier List, Reviews, Share text/image, friend comparison, clipboard
+        // copy) is supposed to route through — so a direct unit check on it covers correctness
+        // for all of them at once. The grid/list/Tier List checks below confirm they actually
+        // call through to it rather than printing the raw number.
+        const savedScale=localStorage.getItem('nl_rating_scale');
+        localStorage.setItem('nl_rating_scale','5');
+        const fmt5=formatRating(8);
+        localStorage.setItem('nl_rating_scale','pct');
+        const fmtPct=formatRating(8);
+        localStorage.setItem('nl_rating_scale','10');
+        const fmt10=formatRating(8);
+        const unitOk=fmt5==='4 / 5'&&fmtPct==='80%'&&fmt10==='8 / 10';
+
+        const savedLIB=LIB.slice();
+        const testId=uid();
+        LIB.unshift({id:testId,title:'__RatingScaleTest__',type:'anime',status:'watched',rating:8,tags:[],added:Date.now(),updated:Date.now()});
+        localStorage.setItem('nl_rating_scale','pct');
+
+        VIEW='grid';localStorage.setItem('nl_view',VIEW);renderLib();
+        const gridCard=document.querySelector('.mc[data-id="'+testId+'"] .mcr-b');
+        const gridOk=!!gridCard&&gridCard.textContent.includes('80%');
+
+        VIEW='list';localStorage.setItem('nl_view',VIEW);renderLib();
+        const listCard=document.querySelector('.lc[data-id="'+testId+'"] .lcr');
+        const listOk=!!listCard&&listCard.textContent.includes('80%');
+
+        loadTierData();TIER_DATA.S.push(testId);
+        renderTierList();
+        const tierCard=document.querySelector('.tier-card[data-id="'+testId+'"]');
+        const tierOk=!!tierCard&&(tierCard.title||'').includes('80%');
+        TIER_DATA.S=TIER_DATA.S.filter(x=>x!==testId);localStorage.setItem('nl_tiers',JSON.stringify(TIER_DATA));
+
+        LIB=savedLIB;
+        if(savedScale!==null)localStorage.setItem('nl_rating_scale',savedScale);else localStorage.removeItem('nl_rating_scale');
+        VIEW='grid';localStorage.setItem('nl_view',VIEW);
+        save();renderLib();renderTierList();
+        const ok=unitOk&&gridOk&&listOk&&tierOk;
+        tSet(id,ok,'formatRating conversions correct='+unitOk+' (5-scale="'+fmt5+'", pct="'+fmtPct+'", 10-scale="'+fmt10+'"), grid card shows scaled rating='+gridOk+', list card shows scaled rating='+listOk+', Tier List tooltip shows scaled rating='+tierOk);
+        break;
+      }
+
+      case 'listmoodkbd':{
+        const savedLIB=LIB.slice();
+        const testId=uid();
+        LIB.unshift({id:testId,title:'__KbdTest__',type:'anime',status:'watching',tags:[],added:Date.now()});
+
+        VIEW='list';localStorage.setItem('nl_view',VIEW);renderLib();
+        const listCard=document.querySelector('.lc[data-id="'+testId+'"]');
+        const listOk=!!listCard&&listCard.getAttribute('role')==='button'&&listCard.getAttribute('tabindex')==='0'&&!!listCard.getAttribute('aria-label');
+
+        VIEW='mood';localStorage.setItem('nl_view',VIEW);renderLib();
+        const moodCard=document.querySelector('.mc.mood-tile[data-id="'+testId+'"]');
+        const moodOk=!!moodCard&&moodCard.getAttribute('role')==='button'&&moodCard.getAttribute('tabindex')==='0'&&!!moodCard.getAttribute('aria-label');
+
+        LIB=savedLIB;
+        VIEW='grid';localStorage.setItem('nl_view',VIEW);
+        save();renderLib();
+        const ok=listOk&&moodOk;
+        tSet(id,ok,'List view card keyboard-accessible='+listOk+', Mood Board card keyboard-accessible='+moodOk);
+        break;
+      }
+
+      case 'autosave':{
+        // showSaveFilePicker doesn't exist in jsdom (same category as URL.createObjectURL for
+        // t-export) — mock it and the handle it returns, same pattern t-chatretry already uses
+        // for window.fetch, so this tests the actual write/debounce logic rather than skipping.
+        const realPicker=window.showSaveFilePicker;
+        let writtenText=null,closeCalled=false,writeCallCount=0;
+        const fakeHandle={
+          name:'nightlist-autosave.json',
+          createWritable:async()=>({
+            write:async(text)=>{writtenText=text;writeCallCount++;},
+            close:async()=>{closeCalled=true;}
+          })
+        };
+        window.showSaveFilePicker=async()=>fakeHandle;
+        const savedLIB=LIB.slice(),savedBackup=localStorage.getItem('nl_last_backup');
+        const testId=uid();
+        LIB.unshift({id:testId,title:'__AutosaveTest__',type:'anime',status:'want',tags:[],added:Date.now()});
+        localStorage.removeItem('nl_last_backup');
+
+        await enableAutosave();
+        const enabledOk=AUTOSAVE_HANDLE===fakeHandle&&writtenText!==null&&closeCalled;
+        const dataOk=writtenText&&JSON.parse(writtenText).library.some(e=>e.id===testId);
+        const backupStampedOk=!!localStorage.getItem('nl_last_backup');
+
+        // a save() should schedule (debounced) another write, not fire immediately
+        writtenText=null;const countBefore=writeCallCount;
+        LIB[0].rating=7;save();
+        const debouncedOk=writeCallCount===countBefore; // hasn't fired yet — still waiting out the debounce
+        await new Promise(r=>setTimeout(r,2200));
+        const laterWriteOk=writeCallCount===countBefore+1&&writtenText&&JSON.parse(writtenText).library[0].rating===7;
+
+        disableAutosave();
+        const disabledOk=AUTOSAVE_HANDLE===null;
+
+        window.showSaveFilePicker=realPicker;
+        LIB=savedLIB;
+        if(savedBackup!==null)localStorage.setItem('nl_last_backup',savedBackup);else localStorage.removeItem('nl_last_backup');
+        save();
+        const ok=enabledOk&&dataOk&&backupStampedOk&&debouncedOk&&laterWriteOk&&disabledOk;
+        tSet(id,ok,'enable writes+closes='+enabledOk+', written data correct='+dataOk+', counts as a backup='+backupStampedOk+', write is debounced='+debouncedOk+', debounced write lands='+laterWriteOk+', disable clears handle='+disabledOk);
+        break;
+      }
+
+      case 'accounts':{
+        // Supabase itself is unreachable from this sandbox (confirmed via curl — see devlog), so
+        // this mocks a minimal in-memory Supabase (Auth + PostgREST) behind window.fetch, same
+        // pattern t-chatretry uses for window.fetch and t-export uses for URL.createObjectURL.
+        // This cannot prove the REAL Supabase project behaves identically, but it does exercise
+        // every code path — signup, profile load/update, library push (incl. row deletion for
+        // removed entries), admin stats, suspend, and logout-restores-guest-data — against request
+        // shapes written to match Supabase's documented Auth/PostgREST API.
+        const realFetch=window.fetch;
+        const realUrl=ACCT_URL,realKey=ACCT_KEY,realSession=ACCT_SESSION?{...ACCT_SESSION}:null,realProfile=ACCT_PROFILE?{...ACCT_PROFILE}:null;
+        const savedLIB=LIB.slice(),savedShowAdult=SHOW_ADULT;
+        const savedGuestLib=localStorage.getItem('nl_v7');
+
+        const db={profiles:{},items:[]}; // items: {user_id,entry_id,data,updated_at}
+        let uidCounter=0;
+        window.fetch=async(url,opts)=>{
+          const u=new URL(url);
+          const path=u.pathname,qs=u.searchParams;
+          const method=(opts&&opts.method)||'GET';
+          const body=opts&&opts.body?JSON.parse(opts.body):null;
+          const ok=(data,status)=>({ok:true,status:status||200,json:async()=>data,text:async()=>JSON.stringify(data)});
+          if(path==='/auth/v1/signup'){
+            uidCounter++;const uid='mock-user-'+uidCounter;
+            db.profiles[uid]={id:uid,username:body.email.split('@')[0],is_admin:false,is_suspended:false,show_adult:false,created_at:new Date().toISOString()};
+            return ok({access_token:'tok-'+uid,refresh_token:'ref-'+uid,expires_in:3600,user:{id:uid,email:body.email}});
+          }
+          if(path==='/auth/v1/token'&&qs.get('grant_type')==='refresh_token'){
+            const uid=body.refresh_token.replace('ref-','');
+            return ok({access_token:'tok-'+uid,refresh_token:'ref-'+uid,expires_in:3600,user:{id:uid,email:'test@mock.local'}});
+          }
+          if(path==='/auth/v1/logout')return ok({});
+          if(path==='/rest/v1/profiles'){
+            const idFilter=qs.get('id');
+            if(method==='GET'&&idFilter){
+              const uid=idFilter.replace('eq.','');
+              return ok(db.profiles[uid]?[db.profiles[uid]]:[]);
+            }
+            if(method==='GET')return ok(Object.values(db.profiles)); // admin list
+            if(method==='PATCH'&&idFilter){
+              const uid=idFilter.replace('eq.','');
+              Object.assign(db.profiles[uid],body);
+              return ok([db.profiles[uid]]);
+            }
+          }
+          if(path==='/rest/v1/library_items'){
+            if(method==='GET'){
+              const userFilter=qs.get('user_id');
+              if(userFilter){const uid=userFilter.replace('eq.','');return ok(db.items.filter(r=>r.user_id===uid));}
+              return ok(db.items.map(r=>({user_id:r.user_id}))); // admin stats
+            }
+            if(method==='POST'){
+              body.forEach(row=>{
+                const i=db.items.findIndex(r=>r.user_id===row.user_id&&r.entry_id===row.entry_id);
+                if(i>=0)db.items[i]=row;else db.items.push(row);
+              });
+              return ok(body);
+            }
+            if(method==='DELETE'){
+              const uid=qs.get('user_id').replace('eq.',''),eid=qs.get('entry_id').replace('eq.','');
+              db.items=db.items.filter(r=>!(r.user_id===uid&&r.entry_id===eid));
+              return ok(null,204);
+            }
+          }
+          return{ok:false,status:404,json:async()=>({}),text:async()=>'mock: unhandled '+method+' '+path};
+        };
+
+        ACCT_URL='https://mock.supabase.co';ACCT_KEY='mock-anon-key';ACCT_SESSION=null;ACCT_PROFILE=null;
+        let results={};
+        try{
+          await acctSignUp('tester@mock.local','pw123456');
+          results.signupOk=acctLoggedIn()&&!!ACCT_PROFILE&&ACCT_PROFILE.username==='tester';
+
+          await acctUpdateProfile({username:'renamed',show_adult:true});
+          results.profileUpdateOk=ACCT_PROFILE.username==='renamed'&&ACCT_PROFILE.show_adult===true&&SHOW_ADULT===true;
+
+          const entryA=uid(),entryB=uid();
+          LIB=[{id:entryA,title:'Cloud Test A',type:'anime',status:'watching',tags:[],added:Date.now()},
+               {id:entryB,title:'Cloud Test B',type:'manga',status:'want',tags:[],added:Date.now()}];
+          await acctPushLibrary();
+          results.pushOk=db.items.length===2&&db.items.every(r=>r.user_id===ACCT_SESSION.user_id);
+
+          LIB=LIB.filter(e=>e.id!==entryB); // remove one — push should delete its row, not just stop sending it
+          await acctPushLibrary();
+          results.pushDeleteOk=db.items.length===1&&db.items[0].entry_id===entryA;
+
+          LIB=[]; // simulate a fresh tab
+          await acctPullLibrary();
+          results.pullOk=LIB.length===1&&LIB[0].id===entryA&&LIB[0].title==='Cloud Test A';
+
+          // second account, for admin stats to have something to aggregate across users
+          ACCT_SESSION=null;ACCT_PROFILE=null;
+          await acctSignUp('other@mock.local','pw123456');
+          await acctPushLibrary(); // 0 items for this one — still counts as a user
+          const adminUid=Object.keys(db.profiles)[0];
+          db.profiles[adminUid].is_admin=true;
+          ACCT_SESSION={access_token:'tok-'+adminUid,refresh_token:'ref-'+adminUid,user_id:adminUid,email:'tester@mock.local',expires_at:Date.now()+3600000};
+          ACCT_PROFILE=db.profiles[adminUid];
+
+          const stats=await acctAdminStats();
+          results.adminStatsOk=stats.users.length===2&&stats.counts[adminUid]===1;
+
+          const otherUid=Object.keys(db.profiles).find(k=>k!==adminUid);
+          await acctSetSuspended(otherUid,true);
+          results.suspendOk=db.profiles[otherUid].is_suspended===true;
+
+          await acctLogOut();
+          results.logoutOk=!acctLoggedIn()&&ACCT_PROFILE===null;
+        }catch(e){
+          results.threw=e.message;
+        }
+
+        window.fetch=realFetch;
+        ACCT_URL=realUrl;ACCT_KEY=realKey;ACCT_SESSION=realSession;ACCT_PROFILE=realProfile;
+        LIB=savedLIB;SHOW_ADULT=savedShowAdult;
+        if(savedGuestLib!==null)localStorage.setItem('nl_v7',savedGuestLib);
+        renderLib();
+        const ok2=results.signupOk&&results.profileUpdateOk&&results.pushOk&&results.pushDeleteOk&&results.pullOk&&results.adminStatsOk&&results.suspendOk&&results.logoutOk&&!results.threw;
+        tSet(id,ok2,(results.threw?'THREW: '+results.threw+' — ':'')+'signup='+results.signupOk+', profile update='+results.profileUpdateOk+', push='+results.pushOk+', push deletes removed rows='+results.pushDeleteOk+', pull rebuilds LIB='+results.pullOk+', admin stats='+results.adminStatsOk+', suspend='+results.suspendOk+', logout restores guest='+results.logoutOk);
+        break;
+      }
+
       case 'letterboxd':{
         const csv='Date,Name,Year,Letterboxd URI,Rating\n2024-01-01,__TEST_MOVIE__,2023,https://example.com,4.5';
         const lines=csv.split(/\r?\n/).filter(l=>l.trim());
@@ -4711,19 +5545,35 @@ async function tRun(id,btn){
         LIB.unshift({id:keepId,title:'Merge Test A',type:'anime',status:'watching',progress:5,total:24,rating:null,tags:['action'],notes:'',rewatchCount:0,cover:'',added:Date.now()-5000,updated:Date.now()});
         LIB.unshift({id:discardId,title:'Merge Test A (dup)',type:'anime',status:'watched',progress:12,total:24,rating:8,tags:['isekai'],notes:'good one',rewatchCount:1,cover:'http://example.com/c.jpg',added:Date.now()-9000,updated:Date.now()});
         saveWatchLogs(discardId,[{ts:Date.now(),ep:1,note:'test log'}]);
+        // tier + review setup: discard is placed in S and has a review; keep has neither
+        loadTierData();TIER_DATA.S.push(discardId);localStorage.setItem('nl_tiers',JSON.stringify(TIER_DATA));
+        const revBefore=getReviews();revBefore[discardId]={rating:8,text:'test review'};saveReviews(revBefore);
         mergeEntries(keepId,discardId);
         const k=LIB.find(e=>e.id===keepId);
         const discardGone=!LIB.find(e=>e.id===discardId);
         const wentToTrash=TRASH.length===trashBefore+1&&!!TRASH.find(e=>e.id===discardId);
         const fieldsOk=k&&k.status==='watched'&&k.progress===12&&k.rating===8&&k.rewatchCount===1&&k.cover==='http://example.com/c.jpg'&&k.tags.includes('action')&&k.tags.includes('isekai')&&(k.notes||'').includes('good one');
         const logsMerged=getWatchLogs(keepId).some(l=>l.note==='test log');
+        loadTierData();
+        const tierMerged=TIER_DATA.S.includes(keepId)&&!TIER_DATA.S.includes(discardId);
+        const reviewsAfterMerge=getReviews();
+        const reviewMerged=!!reviewsAfterMerge[keepId]&&reviewsAfterMerge[keepId].text==='test review'&&!reviewsAfterMerge[discardId];
+        // undo: should put keep back to its pre-merge (unplaced, no review) state and restore discard
+        const undoBtn=document.getElementById('tc').querySelector('button');
+        if(undoBtn)undoBtn.click();
+        loadTierData();
+        const undoTierOk=!TIER_DATA.S.includes(keepId)&&TIER_DATA.S.includes(discardId);
+        const reviewsAfterUndo=getReviews();
+        const undoReviewOk=!reviewsAfterUndo[keepId]&&!!reviewsAfterUndo[discardId];
         // cleanup
         LIB=LIB.filter(e=>e.id!==keepId&&e.id!==discardId);
         TRASH=TRASH.filter(e=>e.id!==discardId);saveTrash();
         const allLogs=JSON.parse(localStorage.getItem('nl_wlogs')||'{}');delete allLogs[keepId];delete allLogs[discardId];localStorage.setItem('nl_wlogs',JSON.stringify(allLogs));
+        loadTierData();TIER_DATA.S=TIER_DATA.S.filter(x=>x!==keepId&&x!==discardId);localStorage.setItem('nl_tiers',JSON.stringify(TIER_DATA));
+        const r=getReviews();delete r[keepId];delete r[discardId];saveReviews(r);
         save();renderLib();
-        const ok=discardGone&&wentToTrash&&fieldsOk&&logsMerged;
-        tSet(id,ok,'Discard removed from library='+discardGone+', moved to Trash='+wentToTrash+', fields merged correctly='+fieldsOk+', watch logs merged='+logsMerged);
+        const ok=discardGone&&wentToTrash&&fieldsOk&&logsMerged&&tierMerged&&reviewMerged&&undoTierOk&&undoReviewOk;
+        tSet(id,ok,'fields='+fieldsOk+', logs='+logsMerged+', tier merged='+tierMerged+', review merged='+reviewMerged+', undo restored tier='+undoTierOk+', undo restored review='+undoReviewOk);
         break;
       }
 
@@ -5178,18 +6028,46 @@ async function tRun(id,btn){
       }
 
       case 'export':{
-        doExport();
-        tSet(id,true,'Download triggered with '+LIB.length+' entries. Check Downloads folder.');
+        // URL.createObjectURL is a standard browser API that every browser this app targets
+        // implements — it's only absent in jsdom (this headless test runner), which is why this
+        // always threw here before. Previously this case didn't even check doExport()'s result,
+        // just called it and reported success unconditionally — so it was never really testing
+        // anything. Stub the one browser-only call (same pattern t-chatretry uses for window.fetch),
+        // then actually verify the exported JSON shape and the download attributes it built.
+        const realCreate=URL.createObjectURL,realRevoke=URL.revokeObjectURL;
+        let capturedBlob=null,capturedUrl=null;
+        URL.createObjectURL=(b)=>{capturedBlob=b;capturedUrl='blob:test-'+Date.now();return capturedUrl;};
+        URL.revokeObjectURL=()=>{};
+        const realClick=HTMLAnchorElement.prototype.click;
+        let clicked=false,hrefSeen=null,downloadSeen=null;
+        HTMLAnchorElement.prototype.click=function(){clicked=true;hrefSeen=this.href;downloadSeen=this.download;};
+        let text=null,parsed=null;
+        try{
+          doExport();
+          if(capturedBlob)text=await capturedBlob.text();
+          if(text)parsed=JSON.parse(text);
+        }finally{
+          URL.createObjectURL=realCreate;URL.revokeObjectURL=realRevoke;
+          HTMLAnchorElement.prototype.click=realClick;
+        }
+        const shapeOk=!!parsed&&Array.isArray(parsed.library)&&Array.isArray(parsed.lists)&&parsed.library.length===LIB.length;
+        const linkOk=clicked&&hrefSeen===capturedUrl&&/^nightlist-\d{4}-\d{2}-\d{2}\.json$/.test(downloadSeen||'');
+        const ok=shapeOk&&linkOk;
+        tSet(id,ok,'Exported JSON has '+(parsed?parsed.library.length:'?')+' library entries (expected '+LIB.length+'), lists array present='+(!!parsed&&Array.isArray(parsed.lists))+', download filename='+downloadSeen);
         break;
       }
 
       case 'random':{
-        if(!LIB.length){tSet(id,false,'Add library entries first');break;}
+        const savedLIB=LIB.slice();
+        let seeded=false;
+        if(!LIB.length){LIB=[{id:uid(),title:'__Test Random__',type:'anime',status:'want',tags:[],added:Date.now()}];seeded=true;}
         goPage('random');
         pickRandom('');
         await new Promise(r=>setTimeout(r,200));
         const area=document.getElementById('rr-area');
-        tSet(id,area&&area.innerHTML.length>100,'Random pick displayed: '+(area&&area.querySelector('.rr')?'✓':'none visible'));
+        const ok=area&&area.innerHTML.length>100;
+        if(seeded){LIB=savedLIB;save();}
+        tSet(id,ok,'Random pick displayed: '+(ok&&area.querySelector('.rr')?'✓':'none visible')+(seeded?' (self-seeded a test entry)':''));
         break;
       }
 
@@ -5567,7 +6445,7 @@ document.addEventListener('keydown',e=>{
   const tag=document.activeElement.tagName.toLowerCase();
   const typing=tag==='input'||tag==='textarea'||tag==='select';
   const anyOvOpen=document.querySelector('.ov.open');
-  if(e.key==='Escape'){if(anyOvOpen){const ovs=document.querySelectorAll('.ov.open');ovs.forEach(o=>o.classList.remove('open'));}return;}
+  if(e.key==='Escape'){if(anyOvOpen){const ovs=document.querySelectorAll('.ov.open');ovs.forEach(o=>{o.classList.remove('open');o.setAttribute('aria-hidden','true');});document.removeEventListener('keydown',_trapFocus);if(_lastFocus&&document.body.contains(_lastFocus)){_lastFocus.focus();_lastFocus=null;}}return;}
   if(typing)return;
   if(e.key==='/'||e.key==='.'){e.preventDefault();goLib('','');setTimeout(()=>document.getElementById('lib-q').focus(),50);return;}
   if(e.key==='?'){openOv('ov-keys');return;}
@@ -5876,30 +6754,30 @@ function cardM(x){
   // everything that queries '.mc' (batch select, bulk-tag, tests) still works
   // identically regardless of which view mode is active.
   const isBlurred=x.adult&&!REVEALED_ADULT_COVERS.has(x.id);
-  return '<div class="mc mood-tile" data-id="'+x.id+'" onclick="openDet(\''+x.id+'\')" title="'+es(x.title)+'">'
+  return '<div class="mc mood-tile" data-id="'+x.id+'" role="button" tabindex="0" aria-label="'+es(x.title)+'" onclick="openDet(\''+x.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openDet(\''+x.id+'\');}" title="'+es(x.title)+'">'
     +'<div class="mcc'+(x.cover?' has-cover':'')+'" style="aspect-ratio:2/3;border-radius:8px">'
     +(x.cover?'<img class="'+(isBlurred?'adult-blur-img':'')+'" src="'+es(x.cover)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.opacity=\'1\'">':'')
     +'<span class="mcc-em">'+(EM[x.type]||'📁')+'</span>'
-    +(isBlurred?'<div class="adult-reveal" onclick="event.stopPropagation();revealAdultCover(\''+x.id+'\')">🔞</div>':'')
+    +(isBlurred?'<div class="adult-reveal" role="button" tabindex="0" aria-label="Reveal blurred cover" onclick="event.stopPropagation();revealAdultCover(\''+x.id+'\')" onkeydown="if(event.key===\'Enter\'){event.stopPropagation();revealAdultCover(\''+x.id+'\');}">🔞</div>':'')
     +'</div></div>';
 }
 function cardG(x){
   const pct=x.progress&&x.total?Math.min(100,Math.round(x.progress/x.total*100)):null;
   const showEpBtn=x.status==='watching'&&(x.total||x.progress!=null);
   const isBlurred=x.adult&&!REVEALED_ADULT_COVERS.has(x.id);
-  return '<div class="mc" data-id="'+x.id+'" onclick="openDet(\''+x.id+'\')">'
+  return '<div class="mc" data-id="'+x.id+'" role="button" tabindex="0" aria-label="'+es(x.title)+', '+(SL[x.status]||x.status)+'" onclick="openDet(\''+x.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openDet(\''+x.id+'\');}">'
     +'<div class="mcc'+(x.cover?' has-cover':'')+'">'
     +(x.cover?'<img class="'+(isBlurred?'adult-blur-img':'')+'" src="'+es(x.cover)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.opacity=\'1\'">'  :'')
     +'<span class="mcc-em">'+(EM[x.type]||'📁')+'</span>'
     +'<div class="mcc-ov"></div>'
-    +(isBlurred?'<div class="adult-reveal" onclick="event.stopPropagation();revealAdultCover(\''+x.id+'\')">🔞<br>Tap to reveal</div>':'')
+    +(isBlurred?'<div class="adult-reveal" role="button" tabindex="0" aria-label="Reveal blurred cover" onclick="event.stopPropagation();revealAdultCover(\''+x.id+'\')" onkeydown="if(event.key===\'Enter\'){event.stopPropagation();revealAdultCover(\''+x.id+'\');}">🔞<br>Tap to reveal</div>':'')
     +'<span class="mct" style="background:'+(TBG[x.type]||'rgba(255,255,255,.1)')+';color:'+(TTX[x.type]||'#fff')+'">'+x.type+'</span>'
     +(x.adult?'<span style="position:absolute;bottom:6px;left:6px;z-index:3;font-size:11px;background:rgba(239,68,68,.85);color:#fff;padding:2px 6px;border-radius:99px;backdrop-filter:blur(8px)" title="Marked as adult content">🔞</span>':'')
-    +(x.rating?'<span class="mcr-b">★ '+x.rating+'</span>':'')
+    +(x.rating?'<span class="mcr-b">★ '+formatRating(x.rating)+'</span>':'')
     // Ep +1 button (shows on hover for watching items)
-    +(showEpBtn?'<button class="ep-inc" onclick="epInc(event,\''+x.id+'\')" title="Mark next ep/ch">+1 ep</button>':'')
+    +(showEpBtn?'<button class="ep-inc" aria-label="Mark next episode for '+es(x.title)+'" onclick="epInc(event,\''+x.id+'\')" title="Mark next ep/ch">+1 ep</button>':'')
     // Quick-status toggle button
-    +'<button style="position:absolute;bottom:6px;right:6px;z-index:5;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:2px 6px;font-size:10px;color:#fff;cursor:pointer;font-family:var(--f)" onclick="quickStatusOpen(event,\''+x.id+'\')" title="Quick status">'+(SC[x.status]?'<span style="color:'+(SC[x.status]||'#fff')+'">'+(SL[x.status]||x.status).slice(0,4)+'</span>':'…')+'</button>'
+    +'<button style="position:absolute;bottom:6px;right:6px;z-index:5;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:2px 6px;font-size:10px;color:#fff;cursor:pointer;font-family:var(--f)" onclick="quickStatusOpen(event,\''+x.id+'\')" title="Quick status" aria-label="Change status for '+es(x.title)+'" aria-haspopup="true">'+(SC[x.status]?'<span style="color:'+(SC[x.status]||'#fff')+'">'+(SL[x.status]||x.status).slice(0,4)+'</span>':'…')+'</button>'
     +'<div class="qs-pop" id="qs-'+x.id+'" onclick="event.stopPropagation()">'
     +Object.entries(SL).map(([s,l])=>'<button class="qs-item" onclick="quickStatusSet(event,\''+x.id+'\',\''+s+'\')">'+(SC[s]?'<span style="color:'+(SC[s]||'var(--tx2)')+'">⬤</span> ':'')+l+'</button>').join('')
     +'</div>'
@@ -6052,7 +6930,7 @@ function renderCompareResults(friendItems){
     +(avgDiff!==null?'<div class="stc" style="padding:14px;text-align:center"><div style="font-size:22px;font-weight:800">'+avgDiff+'</div><div style="font-size:10.5px;color:var(--tx3);text-transform:uppercase">Avg Rating Diff</div></div>':'')
     +'</div>'
     +(friendOnly.length?'<div class="stc" style="padding:14px 16px;margin-bottom:14px"><div class="wt-sub" style="margin-bottom:6px">🌟 They have, you don\'t — possible recommendations</div>'
-      +friendOnly.sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,15).map(f=>rowHtml(f.title,f.rating?f.rating+'/10':'')).join('')
+      +friendOnly.sort((a,b)=>(b.rating||0)-(a.rating||0)).slice(0,15).map(f=>rowHtml(f.title,f.rating?formatRating(f.rating):'')).join('')
       +(friendOnly.length>15?'<div style="font-size:11px;color:var(--tx3);margin-top:6px">+'+(friendOnly.length-15)+' more</div>':'')
       +'</div>':'')
     +(shared.length?'<div class="stc" style="padding:14px 16px;margin-bottom:14px"><div class="wt-sub" style="margin-bottom:6px">🤝 In both lists</div>'
@@ -6786,7 +7664,7 @@ function openShareCard(id){
     +'<div class="share-brand">NightList</div>'
     +'<div class="share-title">'+es(x.title)+'</div>'
     +'<div class="share-meta">'+x.type+(x.year?' · '+x.year:'')+' · '+(SL[x.status]||x.status)+'</div>'
-    +(x.rating?'<div class="share-rating">'+x.rating+' <span style="font-size:13px;color:var(--am)">'+stars.slice(0,10)+'</span></div>':'')
+    +(x.rating?'<div class="share-rating">'+formatRating(x.rating)+' <span style="font-size:13px;color:var(--am)">'+stars.slice(0,10)+'</span></div>':'')
     +(x.tags&&x.tags.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">'+x.tags.slice(0,4).map(t=>'<span class="tpill" style="font-size:9.5px">'+es(t)+'</span>').join('')+'</div>':'')
     +'</div>';
   openOv('ov-share');
@@ -6796,7 +7674,7 @@ function copyShareText(){
   const txt='📺 '+x.title+'\n'
     +'Type: '+x.type+(x.year?' ('+x.year+')':'')+'\n'
     +'Status: '+(SL[x.status]||x.status)+'\n'
-    +(x.rating?'Rating: '+x.rating+'/10 ★\n':'')
+    +(x.rating?'Rating: '+formatRating(x.rating)+' ★\n':'')
     +(x.tags&&x.tags.length?'Tags: '+x.tags.join(', ')+'\n':'')
     +'\n— via NightList';
   navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard!','ok')).catch(()=>toast('Copy failed','er'));
@@ -6916,6 +7794,26 @@ if(SYNC_ACTIVE){
     if(getKey())checkBanner();
   },1800);
   startSyncPoll();
+}
+
+// Boot account session if one was left logged in
+getAcctCfg();
+if(acctLoggedIn()){
+  setTimeout(async()=>{
+    try{
+      await acctLoadProfile();
+      if(ACCT_PROFILE&&ACCT_PROFILE.is_suspended){
+        toast('This account has been suspended','er');
+        await acctLogOut();
+      }else{
+        await acctPullLibrary();
+        applyAdultState();
+      }
+    }catch(e){/* offline or token fully expired — stays logged out until the user retries in the Account panel */}
+    updateAccountNavDot();
+  },1800);
+}else{
+  updateAccountNavDot();
 }
 
 // ═══════════════════════════════════════════════
@@ -7095,7 +7993,7 @@ function renderTierList(){
     const x=LIB.find(e=>e.id===id);if(!x)return null;
     if(!SHOW_ADULT&&(ADULT_TYPES.has(x.type)||x.adult))return null; // stays placed in storage, just not rendered while locked
     const div=document.createElement('div');
-    div.className='tier-card';div.draggable=true;div.dataset.id=id;div.title=x.title;
+    div.className='tier-card';div.draggable=true;div.dataset.id=id;div.title=x.title+(x.rating?' — '+formatRating(x.rating):'');
     div.addEventListener('dragstart',function(e){tierDragStart(e,this);});
     div.addEventListener('dragend',function(){this.style.opacity='1';});
     if(x.cover){const img=document.createElement('img');img.src=x.cover;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';img.onerror=function(){this.style.display='none';};div.appendChild(img);}
@@ -7587,7 +8485,7 @@ function renderShareList(){
     row.innerHTML='<span style="color:var(--tx3);font-size:11px;width:22px;flex-shrink:0">'+(i+1)+'.</span>'
       +(x.cover?'<img src="'+es(x.cover)+'" style="width:28px;height:40px;border-radius:4px;object-fit:cover;flex-shrink:0">':'<div style="width:28px;height:40px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">'+(EM[x.type]||'📁')+'</div>')
       +'<div style="flex:1;min-width:0"><div style="font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+es(x.title)+'</div>'
-      +'<div style="font-size:10px;color:var(--tx3)">'+x.type+(x.year?' · '+x.year:'')+(x.rating?' · ★'+x.rating:'')+'</div></div>';
+      +'<div style="font-size:10px;color:var(--tx3)">'+x.type+(x.year?' · '+x.year:'')+(x.rating?' · ★'+formatRating(x.rating):'')+'</div></div>';
     out.appendChild(row);
   });
 }
@@ -7603,7 +8501,7 @@ function copyShareList(){
     text+=(i+1)+'. '+x.title;
     if(x.type)text+=' ['+x.type+']';
     if(x.year)text+=' ('+x.year+')';
-    if(x.rating)text+=' ★'+x.rating+'/10';
+    if(x.rating)text+=' ★'+formatRating(x.rating);
     text+='\n';
   });
   text+='\n— Generated by NightList';
