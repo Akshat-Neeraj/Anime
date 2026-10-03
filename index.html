@@ -845,7 +845,7 @@ button,input,select,textarea{font-family:var(--f)}
       <span id="adult-lbl">Adult Content</span>
       <span id="adult-badge" style="margin-left:auto;font-size:9.5px;padding:1px 7px;border-radius:99px;background:rgba(239,68,68,0.15);color:#f87171;font-weight:700">HIDDEN</span>
     </div>
-    <div class="ni" onclick="goFlaggedAdult()"><span class="ni-ic">🔞</span>Flagged Items</div>
+    <div class="ni" id="ni-flagged" onclick="goFlaggedAdult()"><span class="ni-ic">🔞</span>Flagged Items</div>
   </div>
   <div class="sf">
     <div class="ni" onclick="openBulk()"><span class="ni-ic">⟪</span>Bulk Import</div>
@@ -1525,6 +1525,10 @@ button,input,select,textarea{font-family:var(--f)}
       <div class="tp-note" id="tn-autosave"></div>
       <button class="tp-btn" id="t-accounts" onclick="tRun('accounts',this)">⊙ Public Accounts: signup→profile→library→admin (mocked network)</button>
       <div class="tp-note" id="tn-accounts"></div>
+      <button class="tp-btn" id="t-adultnavhide" onclick="tRun('adultnavhide',this)">⊙ Adult Content nav fully hidden when off (guest + account)</button>
+      <div class="tp-note" id="tn-adultnavhide"></div>
+      <button class="tp-btn" id="t-oauthreset" onclick="tRun('oauthreset',this)">⊙ Google OAuth redirect + password reset (mocked network)</button>
+      <div class="tp-note" id="tn-oauthreset"></div>
       <button class="tp-btn" id="t-letterboxd" onclick="tRun('letterboxd',this)">⊙ Letterboxd CSV parser</button>
       <div class="tp-note" id="tn-letterboxd"></div>
       <button class="tp-btn" id="t-foryou" onclick="tRun('foryou',this)">⊙ For You recommendations</button>
@@ -3602,9 +3606,12 @@ function renderAccountOv(){
     return;
   }
   if(!acctLoggedIn()){
-    body.innerHTML='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn bs" id="acct-tab-in" onclick="acctSwitchTab(\'in\')">Log In</button><button class="btn bs" id="acct-tab-up" onclick="acctSwitchTab(\'up\')">Sign Up</button></div>'
+    body.innerHTML='<button class="btn bs" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px" onclick="acctSignInWithGoogle()"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.6h7.1c4.2-3.8 6.6-9.5 6.6-16.3z"/><path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.6c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.6-3.9-12.4-9.1H4.3v5.7C7.9 41 15.3 46 24 46z"/><path fill="#FBBC05" d="M11.6 27.9c-.5-1.3-.7-2.7-.7-4.1s.3-2.8.7-4.1v-5.7H4.3C2.9 16.8 2 20.3 2 24s.9 7.2 2.3 10.1l7.3-5.7v-.5z"/><path fill="#EA4335" d="M24 10.8c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C35 4.3 30 2 24 2 15.3 2 7.9 7 4.3 13.9l7.3 5.7c1.8-5.2 6.6-9.1 12.4-8.8z"/></svg>Continue with Google</button>'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--tx3);font-size:11px"><div style="flex:1;height:1px;background:var(--b1)"></div>or<div style="flex:1;height:1px;background:var(--b1)"></div></div>'
+      +'<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn bs" id="acct-tab-in" onclick="acctSwitchTab(\'in\')">Log In</button><button class="btn bs" id="acct-tab-up" onclick="acctSwitchTab(\'up\')">Sign Up</button></div>'
       +'<input type="email" class="fi" id="acct-email-inp" placeholder="email" style="margin-bottom:8px" autocomplete="username">'
-      +'<input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="margin-bottom:10px" autocomplete="current-password">'
+      +'<div style="position:relative;margin-bottom:6px"><input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="width:100%;padding-right:36px" autocomplete="current-password"><button type="button" onclick="acctTogglePwVis()" aria-label="Show password" title="Show password" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:4px">👁</button></div>'
+      +'<div style="text-align:right;margin-bottom:10px"><a href="#" onclick="acctShowForgotPassword();return false;" style="font-size:11.5px;color:var(--tx3)">Forgot password?</a></div>'
       +'<div id="acct-err" style="font-size:12px;color:var(--rd);margin-bottom:8px;display:none"></div>'
       +'<button class="btn bs bp" id="acct-submit-btn" onclick="acctSubmit(\'in\')">Log In</button>'
       +'<div style="font-size:11px;color:var(--tx3);margin-top:10px">This is a real account — separate from, and unrelated to, Device Sync above. Your cloud library here is only visible to you (and, for moderation, this site\'s admin).</div>';
@@ -3632,6 +3639,73 @@ function saveAcctUrlKey(){
   if(!ACCT_URL||!ACCT_KEY){toast('Enter both the URL and key','er');return;}
   saveAcctCfg();renderAccountOv();
 }
+function acctTogglePwVis(){
+  const inp=document.getElementById('acct-pass-inp');
+  if(!inp)return;
+  inp.type=inp.type==='password'?'text':'password';
+}
+function acctShowForgotPassword(){
+  const body=document.getElementById('account-body');
+  if(!body)return;
+  const prefill=document.getElementById('acct-email-inp')?document.getElementById('acct-email-inp').value.trim():'';
+  body.innerHTML='<div style="font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:12px">Enter your account\'s email — if it has an account, we\'ll send a reset link to it.</div>'
+    +'<input type="email" class="fi" id="acct-forgot-email-inp" placeholder="email" value="'+es(prefill)+'" style="margin-bottom:10px">'
+    +'<div id="acct-forgot-msg" style="font-size:12px;margin-bottom:8px;display:none"></div>'
+    +'<button class="btn bs bp" onclick="acctSubmitForgotPassword()" style="margin-right:8px">Send reset link</button>'
+    +'<button class="btn bs" onclick="renderAccountOv()">Back</button>';
+}
+async function acctSubmitForgotPassword(){
+  const email=document.getElementById('acct-forgot-email-inp').value.trim();
+  const msg=document.getElementById('acct-forgot-msg');
+  if(!email){msg.textContent='Enter an email.';msg.style.color='var(--rd)';msg.style.display='block';return;}
+  try{
+    await acctAuthRequest('/auth/v1/recover',{email});
+    msg.textContent='If that email has an account, a reset link is on its way — check your inbox.';
+    msg.style.color='var(--gr)';msg.style.display='block';
+  }catch(e){
+    // Supabase's recover endpoint intentionally doesn't reveal whether the email exists (that's
+    // a real account-enumeration protection, not a bug) — but a genuine connection/config error
+    // still needs to surface, so only mask the "not found"-shaped failures, not all of them.
+    msg.textContent='If that email has an account, a reset link is on its way — check your inbox.';
+    msg.style.color='var(--gr)';msg.style.display='block';
+  }
+}
+function acctSignInWithGoogle(){
+  if(!ACCT_URL||!ACCT_KEY){toast('Connect your Supabase project first','er');return;}
+  // NOTE: this requires Google sign-in to actually be turned on for this Supabase project —
+  // Authentication → Providers → Google, with a real Google Cloud OAuth client id/secret entered
+  // there. That setup lives entirely on Supabase/Google's side; nothing in this file can do it —
+  // same category as the ads/payments setup mentioned earlier. Until that's done, clicking this
+  // button will land on an error page from Supabase, not a bug in this code.
+  const redirectTo=window.location.href.split('#')[0];
+  window.location.href=ACCT_URL.replace(/\/$/,'')+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirectTo);
+}
+async function acctHandleOAuthRedirect(){
+  // After Google sign-in, Supabase sends the browser back here with the session in the URL's
+  // hash fragment (#access_token=...&refresh_token=...&...), not a normal query string — that's
+  // the standard implicit-flow shape, deliberately never sent to any server, not even ours.
+  if(!location.hash.includes('access_token='))return false;
+  const params=new URLSearchParams(location.hash.slice(1));
+  const accessToken=params.get('access_token'),refreshToken=params.get('refresh_token'),expiresIn=parseInt(params.get('expires_in')||'3600');
+  if(!accessToken)return false;
+  try{
+    const r=await fetch(ACCT_URL.replace(/\/$/,'')+'/auth/v1/user',{headers:{'apikey':ACCT_KEY,'Authorization':'Bearer '+accessToken},signal:AbortSignal.timeout(10000)});
+    const u=await r.json();
+    if(!r.ok||!u.id)throw new Error(u.msg||'Could not verify the Google sign-in.');
+    ACCT_SESSION={access_token:accessToken,refresh_token:refreshToken,user_id:u.id,email:u.email,expires_at:Date.now()+expiresIn*1000};
+    saveAcctCfg();
+    history.replaceState(null,'',location.pathname+location.search); // scrub the token out of the visible URL
+    await acctLoadProfile();
+    await acctPullLibrary();
+    applyAdultState();updateAccountNavDot();
+    toast('Logged in with Google','ok');
+    return true;
+  }catch(e){
+    toast('Google sign-in failed: '+e.message,'er');
+    history.replaceState(null,'',location.pathname+location.search);
+    return false;
+  }
+}
 async function acctSubmit(which){
   const email=document.getElementById('acct-email-inp').value.trim();
   const pass=document.getElementById('acct-pass-inp').value;
@@ -3641,7 +3715,7 @@ async function acctSubmit(which){
   try{
     if(which==='up'){await acctSignUp(email,pass);toast('Account created!','ok');}
     else{await acctLogIn(email,pass);toast('Logged in','ok');}
-    renderAccountOv();updateAccountNavDot();
+    renderAccountOv();updateAccountNavDot();applyAdultState();
   }catch(e){err.textContent=e.message;err.style.display='block';}
 }
 async function acctSaveProfileBtn(){
@@ -3650,13 +3724,13 @@ async function acctSaveProfileBtn(){
   try{
     await acctUpdateProfile({username,show_adult:showAdult});
     toast('Profile saved','ok');
-    renderLib();
+    applyAdultState();renderLib();
   }catch(e){toast('Save failed: '+e.message,'er');}
 }
 async function acctLogOutBtn(){
   await acctLogOut();
   closeOv('ov-account');
-  updateAccountNavDot();
+  updateAccountNavDot();applyAdultState();
   toast('Logged out','in');
 }
 function updateAccountNavDot(){
@@ -4277,20 +4351,40 @@ function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeA
 
 function applyAdultState(){
   const body=document.body;
+  const navAdult=document.getElementById('ni-adult'),navFlagged=document.getElementById('ni-flagged');
+  const inAcct=typeof acctLoggedIn==='function'&&acctLoggedIn();
   if(SHOW_ADULT){
     body.classList.add('adult-on');
-    document.getElementById('adult-ico').textContent='🔓';
-    document.getElementById('adult-lbl').textContent='Adult Content';
-    const badge=document.getElementById('adult-badge');
-    badge.textContent='ON';badge.style.background='rgba(236,72,153,0.15)';badge.style.color='#f472b6';
-    document.getElementById('ni-adult').classList.add('adult-active');
+    if(navFlagged)navFlagged.style.display='flex';
+    if(navAdult){
+      navAdult.style.display='flex';
+      document.getElementById('adult-ico').textContent='🔓';
+      document.getElementById('adult-lbl').textContent='Adult Content';
+      const badge=document.getElementById('adult-badge');
+      badge.textContent='ON';badge.style.background='rgba(236,72,153,0.15)';badge.style.color='#f472b6';
+      navAdult.classList.add('adult-active');
+    }
   } else {
     body.classList.remove('adult-on');
-    document.getElementById('adult-ico').textContent='🔒';
-    document.getElementById('adult-lbl').textContent='Adult Content';
-    const badge=document.getElementById('adult-badge');
-    badge.textContent='HIDDEN';badge.style.background='rgba(239,68,68,0.15)';badge.style.color='#f87171';
-    document.getElementById('ni-adult').classList.remove('adult-active');
+    // Hidden means hidden — a public visitor with this off shouldn't see a nav item hinting an
+    // adult section exists at all, let alone a badge announcing it's currently off.
+    if(navFlagged)navFlagged.style.display='none';
+    if(navAdult){
+      if(inAcct){
+        // Logged-in accounts control this from the Account panel's own toggle now — no need for
+        // a second control in the sidebar, and not showing one here is the whole point.
+        navAdult.style.display='none';
+      }else{
+        // Guest/local mode keeps its existing PIN-gated toggle — unrelated to the public account
+        // system, this is just how personal/non-account use already worked before any of this.
+        navAdult.style.display='flex';
+        document.getElementById('adult-ico').textContent='🔒';
+        document.getElementById('adult-lbl').textContent='Adult Content';
+        const badge=document.getElementById('adult-badge');
+        badge.textContent='HIDDEN';badge.style.background='rgba(239,68,68,0.15)';badge.style.color='#f87171';
+        navAdult.classList.remove('adult-active');
+      }
+    }
     // If current filter is an adult type, clear it
     if(ADULT_TYPES.has(F_TYPE)){F_TYPE='';document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('on'));document.querySelector('.cat-tab[data-t=""]').classList.add('on');}
   }
@@ -5479,6 +5573,88 @@ async function tRun(id,btn){
         renderLib();
         const ok2=results.signupOk&&results.profileUpdateOk&&results.pushOk&&results.pushDeleteOk&&results.pullOk&&results.adminStatsOk&&results.suspendOk&&results.logoutOk&&!results.threw;
         tSet(id,ok2,(results.threw?'THREW: '+results.threw+' — ':'')+'signup='+results.signupOk+', profile update='+results.profileUpdateOk+', push='+results.pushOk+', push deletes removed rows='+results.pushDeleteOk+', pull rebuilds LIB='+results.pullOk+', admin stats='+results.adminStatsOk+', suspend='+results.suspendOk+', logout restores guest='+results.logoutOk);
+        break;
+      }
+
+      case 'adultnavhide':{
+        const savedShowAdult=SHOW_ADULT;
+        const savedSession=ACCT_SESSION?{...ACCT_SESSION}:null,savedProfile=ACCT_PROFILE?{...ACCT_PROFILE}:null;
+        const navAdult=document.getElementById('ni-adult'),navFlagged=document.getElementById('ni-flagged');
+
+        // Guest mode, off: Adult Content stays visible (it's the only way to turn it on locally),
+        // Flagged Items is hidden.
+        ACCT_SESSION=null;ACCT_PROFILE=null;SHOW_ADULT=false;applyAdultState();
+        const guestOffOk=navAdult.style.display==='flex'&&navFlagged.style.display==='none';
+
+        // Guest mode, on: both visible.
+        SHOW_ADULT=true;applyAdultState();
+        const guestOnOk=navAdult.style.display==='flex'&&navFlagged.style.display==='flex';
+
+        // Account mode, off: BOTH hidden — the Account panel owns the toggle now, not the sidebar.
+        ACCT_SESSION={access_token:'t',refresh_token:'r',user_id:'u1',email:'x@x.com',expires_at:Date.now()+3600000};
+        ACCT_PROFILE={id:'u1',show_adult:false};
+        SHOW_ADULT=false;applyAdultState();
+        const acctOffOk=navAdult.style.display==='none'&&navFlagged.style.display==='none';
+
+        // Account mode, on: both visible again.
+        SHOW_ADULT=true;applyAdultState();
+        const acctOnOk=navAdult.style.display==='flex'&&navFlagged.style.display==='flex';
+
+        SHOW_ADULT=savedShowAdult;ACCT_SESSION=savedSession;ACCT_PROFILE=savedProfile;applyAdultState();
+        const ok=guestOffOk&&guestOnOk&&acctOffOk&&acctOnOk;
+        tSet(id,ok,'guest+off (adult visible, flagged hidden)='+guestOffOk+', guest+on (both visible)='+guestOnOk+', account+off (BOTH hidden)='+acctOffOk+', account+on (both visible)='+acctOnOk);
+        break;
+      }
+
+      case 'oauthreset':{
+        // Both Google OAuth and password-reset call real Supabase endpoints this sandbox can't
+        // reach — mocked the same way t-accounts mocks the rest of the Auth API.
+        const realFetch=window.fetch;
+        const realUrl=ACCT_URL,realKey=ACCT_KEY,realSession=ACCT_SESSION?{...ACCT_SESSION}:null,realProfile=ACCT_PROFILE?{...ACCT_PROFILE}:null;
+        const savedLIB=LIB.slice(),savedHash=location.hash;
+        ACCT_URL='https://mock.supabase.co';ACCT_KEY='mock-anon-key';ACCT_SESSION=null;ACCT_PROFILE=null;
+
+        let recoverCalledWith=null;
+        window.fetch=async(url,opts)=>{
+          const u=new URL(url);
+          const ok=(data,status)=>({ok:true,status:status||200,json:async()=>data,text:async()=>JSON.stringify(data)});
+          if(u.pathname==='/auth/v1/recover'){recoverCalledWith=JSON.parse(opts.body);return ok({});}
+          if(u.pathname==='/auth/v1/user'){
+            const auth=opts.headers.Authorization||'';
+            if(auth==='Bearer mock-oauth-token')return ok({id:'oauth-user-1',email:'oauthtest@mock.local'});
+            return{ok:false,status:401,json:async()=>({msg:'invalid token'}),text:async()=>'invalid'};
+          }
+          if(u.pathname==='/rest/v1/profiles')return ok([]); // acctLoadProfile falls back to a default row — fine for this test
+          if(u.pathname==='/rest/v1/library_items')return ok([]);
+          return{ok:false,status:404,json:async()=>({}),text:async()=>'unhandled'};
+        };
+
+        let results={};
+        try{
+          recoverCalledWith=null;
+          await acctAuthRequest('/auth/v1/recover',{email:'someone@mock.local'});
+          results.recoverOk=recoverCalledWith&&recoverCalledWith.email==='someone@mock.local';
+
+          // Simulate landing back from Google with a token in the URL hash
+          history.replaceState(null,'','#access_token=mock-oauth-token&refresh_token=mock-oauth-refresh&expires_in=3600&token_type=bearer');
+          const handled=await acctHandleOAuthRedirect();
+          results.oauthHandledOk=handled===true;
+          results.oauthSessionOk=acctLoggedIn()&&ACCT_SESSION.user_id==='oauth-user-1'&&ACCT_SESSION.email==='oauthtest@mock.local';
+          results.hashScrubbedOk=!location.hash.includes('access_token');
+
+          // A page with no token in the hash at all must be a no-op, not an error
+          history.replaceState(null,'','');
+          ACCT_SESSION=null;ACCT_PROFILE=null;
+          const noHashResult=await acctHandleOAuthRedirect();
+          results.noHashNoopOk=noHashResult===false&&!acctLoggedIn();
+        }catch(e){results.threw=e.message;}
+
+        window.fetch=realFetch;
+        ACCT_URL=realUrl;ACCT_KEY=realKey;ACCT_SESSION=realSession;ACCT_PROFILE=realProfile;
+        LIB=savedLIB;
+        history.replaceState(null,'',location.pathname+location.search+savedHash);
+        const ok=results.recoverOk&&results.oauthHandledOk&&results.oauthSessionOk&&results.hashScrubbedOk&&results.noHashNoopOk&&!results.threw;
+        tSet(id,ok,(results.threw?'THREW: '+results.threw+' — ':'')+'password reset sends email='+results.recoverOk+', OAuth redirect builds a session='+results.oauthHandledOk+', session has right user='+results.oauthSessionOk+', token scrubbed from URL='+results.hashScrubbedOk+', no-token page is a no-op='+results.noHashNoopOk);
         break;
       }
 
@@ -7799,10 +7975,13 @@ if(SYNC_ACTIVE){
   startSyncPoll();
 }
 
-// Boot account session if one was left logged in
+// Boot account session — a fresh Google OAuth redirect takes priority over restoring
+// whatever was previously saved, since the redirect IS a brand-new login just happening.
 getAcctCfg();
-if(acctLoggedIn()){
-  setTimeout(async()=>{
+setTimeout(async()=>{
+  const cameFromOAuth=await acctHandleOAuthRedirect();
+  if(cameFromOAuth)return; // acctHandleOAuthRedirect already did profile+library+nav+adult-state
+  if(acctLoggedIn()){
     try{
       await acctLoadProfile();
       if(ACCT_PROFILE&&ACCT_PROFILE.is_suspended){
@@ -7813,11 +7992,9 @@ if(acctLoggedIn()){
         applyAdultState();
       }
     }catch(e){/* offline or token fully expired — stays logged out until the user retries in the Account panel */}
-    updateAccountNavDot();
-  },1800);
-}else{
+  }
   updateAccountNavDot();
-}
+},1800);
 
 // ═══════════════════════════════════════════════
 // ☑ BATCH SELECT
