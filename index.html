@@ -617,6 +617,9 @@ button,input,select,textarea{font-family:var(--f)}
 .light-theme .chat-bubble.chat-user{background:var(--ac)}
 #theme-btn{cursor:pointer;font-size:16px;padding:5px 8px;border-radius:var(--r);background:none;border:1px solid var(--b1);color:var(--tx2);transition:all .13s}
 #theme-btn:hover{background:var(--bg3);color:var(--tx)}
+#rating-scale-btn{cursor:pointer;font-size:11.5px;font-weight:700;letter-spacing:.2px;padding:6px 10px;border-radius:var(--r);background:none;border:1px solid var(--b1);color:var(--tx2);transition:all .13s;font-family:var(--f)}
+#rating-scale-btn:hover{background:var(--bg3);color:var(--tx);border-color:var(--b2)}
+#rating-scale-btn:active{transform:scale(.96)}
 
 /* ═══ IMPROVED LIST VIEW ═══ */
 .lc-full{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
@@ -880,7 +883,7 @@ button,input,select,textarea{font-family:var(--f)}
     </div>
     <div class="tb-r">
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark">🌙</button>
-      <button id="rating-scale-btn" onclick="cycleRatingScale()" title="Change how ratings are displayed (doesn't affect stored data)" style="font-size:11px">/10</button>
+      <button id="rating-scale-btn" onclick="cycleRatingScale()" title="Change how ratings are displayed (doesn't affect stored data)">/10</button>
       <button class="mood-btn" onclick="openMood()" title="AI picks based on your mood">🎭 Mood?</button>
       <button class="btn bs bgh" id="vt-btn" onclick="toggleView()">⊞ Grid</button>
       <select class="btn bs" id="sort-by" onchange="renderLib()" style="padding:5px 9px;cursor:pointer">
