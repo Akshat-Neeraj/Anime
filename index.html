@@ -410,6 +410,13 @@ button,input,select,textarea{font-family:var(--f)}
   .tp{left:0!important;width:100%!important}
   .streak-bar{font-size:11.5px!important;padding:5px 14px!important}
   .cw-ticker{padding:0 14px!important}
+
+  /* iOS Safari auto-zooms the whole page when a focused input's font is under 16px — every
+     text field in the app was below that (.fi's own default is 13.5px, several are set even
+     smaller inline for the Account/Sync connection fields). Forcing 16px here, with !important
+     so it also beats inline font-size overrides, stops that jarring zoom-on-tap everywhere at
+     once rather than patching each field individually. */
+  input,textarea,select{font-size:16px!important}
 }
 
 /* ══════════════════════════════════════════
@@ -1529,6 +1536,8 @@ button,input,select,textarea{font-family:var(--f)}
       <div class="tp-note" id="tn-adultnavhide"></div>
       <button class="tp-btn" id="t-oauthreset" onclick="tRun('oauthreset',this)">⊙ Google OAuth redirect + password reset (mocked network)</button>
       <div class="tp-note" id="tn-oauthreset"></div>
+      <button class="tp-btn" id="t-compoundfallback" onclick="tRun('compoundfallback',this)">⊙ Where-to-watch when account lacks groq/compound (mocked)</button>
+      <div class="tp-note" id="tn-compoundfallback"></div>
       <button class="tp-btn" id="t-letterboxd" onclick="tRun('letterboxd',this)">⊙ Letterboxd CSV parser</button>
       <div class="tp-note" id="tn-letterboxd"></div>
       <button class="tp-btn" id="t-foryou" onclick="tRun('foryou',this)">⊙ For You recommendations</button>
@@ -2265,7 +2274,14 @@ function isRateLimitResponse(status,data){
   const msg=(data&&data.error&&data.error.message)||'';
   return /rate.?limit/i.test(msg)||/tokens per minute/i.test(msg)||/\bTPM\b/i.test(msg);
 }
+// Some Groq accounts don't list groq/compound at all (their model dropdown simply lacks it), and Groq
+// answers "model does not exist or you do not have access". That's a permanent account-level answer,
+// not a transient failure — retrying it just made the user wait ~11s (3s + 8s sleeps) for the same
+// error. Remember it for the rest of the page session so later calls fail instantly, no network trip.
+let COMPOUND_UNAVAILABLE=false;
+function compoundUnavailableError(){const e=new Error('compound_unavailable');e.code='compound_unavailable';return e;}
 async function callAICompound(prompt,maxRetry=2){
+  if(COMPOUND_UNAVAILABLE)throw compoundUnavailableError();
   // Uses groq/compound — has REAL built-in web search, so results reflect
   // sites that are actually live right now instead of the model's stale training data
   const body={model:'groq/compound',max_tokens:2000,messages:[{role:'user',content:prompt}],temperature:0.4,compound_custom:{tools:{enabled_tools:['web_search']}}};
@@ -2286,7 +2302,11 @@ async function callAICompound(prompt,maxRetry=2){
         if(attempt<maxRetry){pendingDelay=extractRetryDelayMs((data.error&&data.error.message)||'');continue;}
         throw new Error((data.error&&data.error.message)||'Rate limited — wait a moment and try again.');
       }
-      if(data.error)throw new Error((data.error&&data.error.message)||JSON.stringify(data.error));
+      if(data.error){
+        const m=(data.error&&data.error.message)||JSON.stringify(data.error);
+        if(/does not exist or you do not have access|model_not_found/i.test(m)||data.error.code==='model_not_found'){COMPOUND_UNAVAILABLE=true;throw compoundUnavailableError();}
+        throw new Error(m);
+      }
       const text=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'';
       if(!text)throw new Error('Empty response from AI');
       return text;
@@ -2296,6 +2316,7 @@ async function callAICompound(prompt,maxRetry=2){
       // it were a transient rate-limit (3s, then 8s of real sleep) just hides the error behind two
       // pointless waits and, worse, leaves a dangling retry mid-flight that can still fire fetch()
       // later against whatever the page has it set to by then. Fail fast instead; real users never hit this.
+      if(e&&e.code==='compound_unavailable')throw e;
       if(e instanceof ReferenceError)throw e;
       if(e.message==='auth_failed')throw e;
       if(attempt<maxRetry)continue;
@@ -3610,7 +3631,7 @@ function renderAccountOv(){
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--tx3);font-size:11px"><div style="flex:1;height:1px;background:var(--b1)"></div>or<div style="flex:1;height:1px;background:var(--b1)"></div></div>'
       +'<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn bs" id="acct-tab-in" onclick="acctSwitchTab(\'in\')">Log In</button><button class="btn bs" id="acct-tab-up" onclick="acctSwitchTab(\'up\')">Sign Up</button></div>'
       +'<input type="email" class="fi" id="acct-email-inp" placeholder="email" style="margin-bottom:8px" autocomplete="username">'
-      +'<div style="position:relative;margin-bottom:6px"><input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="width:100%;padding-right:36px" autocomplete="current-password"><button type="button" onclick="acctTogglePwVis()" aria-label="Show password" title="Show password" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:4px">👁</button></div>'
+      +'<div style="position:relative;margin-bottom:6px"><input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="width:100%;padding-right:36px" autocomplete="current-password"><button type="button" onclick="acctTogglePwVis()" aria-label="Show password" title="Show password" style="position:absolute;right:0;top:0;bottom:0;width:40px;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">👁</button></div>'
       +'<div style="text-align:right;margin-bottom:10px"><a href="#" onclick="acctShowForgotPassword();return false;" style="font-size:11.5px;color:var(--tx3)">Forgot password?</a></div>'
       +'<div id="acct-err" style="font-size:12px;color:var(--rd);margin-bottom:8px;display:none"></div>'
       +'<button class="btn bs bp" id="acct-submit-btn" onclick="acctSubmit(\'in\')">Log In</button>'
@@ -3725,7 +3746,8 @@ async function acctSaveProfileBtn(){
     await acctUpdateProfile({username,show_adult:showAdult});
     toast('Profile saved','ok');
     applyAdultState();renderLib();
-  }catch(e){toast('Save failed: '+e.message,'er');}
+    closeOv('ov-account');
+  }catch(e){toast('Save failed: '+e.message,'er');} // stays open on failure so the error is visible, not hidden behind a closed modal
 }
 async function acctLogOutBtn(){
   await acctLogOut();
@@ -3748,7 +3770,7 @@ async function renderAdminOv(){
   try{
     const{users,counts}=await acctAdminStats();
     const totalItems=Object.values(counts).reduce((a,b)=>a+b,0);
-    body.innerHTML='<div style="display:flex;gap:10px;margin-bottom:16px"><div class="stc" style="flex:1"><div class="stc-l">Users</div><div class="stc-v">'+users.length+'</div></div><div class="stc" style="flex:1"><div class="stc-l">Titles tracked (all users)</div><div class="stc-v">'+totalItems+'</div></div></div>'
+    body.innerHTML='<div style="display:flex;gap:10px;margin-bottom:16px"><div class="stc" style="flex:1"><div class="stc-l">Users</div><div class="stc-v">'+users.length+'</div></div><div class="stc" style="flex:1"><div class="stc-l">Titles tracked</div><div class="stc-v">'+totalItems+'</div></div></div>'
       +'<div style="max-height:360px;overflow-y:auto">'
       +users.map(u=>'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b2)">'
         +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+es(u.username||u.id)+(u.is_admin?' <span style="color:var(--ac);font-size:11px">· Admin</span>':'')+'</div><div style="font-size:11px;color:var(--tx3)">'+(counts[u.id]||0)+' titles · joined '+timeAgo(new Date(u.created_at).getTime())+'</div></div>'
@@ -4421,6 +4443,19 @@ function toggleAdult(){
 // ═══════════════════════════════════════════════
 // WATCH LINKS
 // ═══════════════════════════════════════════════
+function watchSearchFallbackHtml(data){
+  // Used when this Groq account can't use the live-web-search model. Deliberately NOT a fallback to a
+  // plain model: that would answer from memory, and this feature's whole point is never suggesting a
+  // site it hasn't verified is live. Search pages can't go dead, so these are safe to always offer.
+  const t=data.title||'',ty=data.type||'';
+  const verb=/manga|manhwa|manhua|novel|comic/i.test(ty)?'read online':/game/i.test(ty)?'where to play':'watch online';
+  const q=encodeURIComponent(t+' '+verb);
+  const links=[['Google','https://www.google.com/search?q='+q],['DuckDuckGo','https://duckduckgo.com/?q='+q]];
+  if(/movie|tv|series|show/i.test(ty))links.push(['JustWatch','https://www.justwatch.com/in/search?q='+encodeURIComponent(t)]);
+  return '<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:5px">'
+    +links.map(l=>'<a href="'+es(l[1])+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;background:var(--bg3);border:1px solid var(--b1);color:var(--tx);font-size:11px;text-decoration:none">🔎 '+es(l[0])+'</a>').join('')
+    +'<div style="width:100%;font-size:10px;color:var(--tx3);margin-top:2px">Live link lookup isn\'t enabled for your Groq account, so these are search shortcuts instead — nothing guessed from memory.</div></div>';
+}
 async function findWatchLinks(key){
   const data=_g(key);
   if(!data||!data.title)return;
@@ -4445,7 +4480,10 @@ async function findWatchLinks(key){
       '</a>').join('')+
       '<div style="width:100%;font-size:10px;color:var(--tx3);margin-top:2px">Found via live search — links can still go stale over time, so if one doesn\'t work, hit refresh to re-search.</div>'+
       '</div>';
-  }catch(e){el.innerHTML='<div style="font-size:12px;color:var(--rd);padding:4px 0">Failed: '+es(e.message)+'</div>';}
+  }catch(e){
+    if(e&&e.code==='compound_unavailable'){el.innerHTML=watchSearchFallbackHtml(data);return;}
+    el.innerHTML='<div style="font-size:12px;color:var(--rd);padding:4px 0">Failed: '+es(e.message)+'</div>';
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -5655,6 +5693,31 @@ async function tRun(id,btn){
         history.replaceState(null,'',location.pathname+location.search+savedHash);
         const ok=results.recoverOk&&results.oauthHandledOk&&results.oauthSessionOk&&results.hashScrubbedOk&&results.noHashNoopOk&&!results.threw;
         tSet(id,ok,(results.threw?'THREW: '+results.threw+' — ':'')+'password reset sends email='+results.recoverOk+', OAuth redirect builds a session='+results.oauthHandledOk+', session has right user='+results.oauthSessionOk+', token scrubbed from URL='+results.hashScrubbedOk+', no-token page is a no-op='+results.noHashNoopOk);
+        break;
+      }
+
+      case 'compoundfallback':{
+        const realFetch=window.fetch,realKey=localStorage.getItem('nl_key');
+        let calls=0;
+        window.fetch=async()=>{calls++;return{ok:false,status:404,json:async()=>({error:{message:'The model `groq/compound` does not exist or you do not have access to it.',type:'invalid_request_error',code:'model_not_found'}}),text:async()=>''};};
+        const wasUnavailable=COMPOUND_UNAVAILABLE;COMPOUND_UNAVAILABLE=false;
+        localStorage.setItem('nl_key','test-key'); // direct write: setKey() would also try a cloud key-sync
+        const t0=Date.now();
+        let code1=null;try{await callAICompound('x');}catch(e){code1=e.code;}
+        const fast=Date.now()-t0<1500;            // old behaviour slept 3s+8s retrying this
+        const oneCall=calls===1;
+        const before=calls;let code2=null;try{await callAICompound('y');}catch(e){code2=e.code;}
+        const remembered=calls===before&&code2==='compound_unavailable'; // second call never hits the network
+        const holder=document.createElement('div');holder.id='watch-links-__tcf';document.body.appendChild(holder);
+        const k=sj({id:'__tcf',title:'Test Show',type:'tv'});
+        await findWatchLinks(k);
+        const html=holder.innerHTML;
+        const linksOk=html.includes('google.com/search')&&html.includes('justwatch.com')&&html.includes('search shortcuts')&&!html.includes('Failed:');
+        holder.remove();
+        window.fetch=realFetch;COMPOUND_UNAVAILABLE=wasUnavailable;
+        if(realKey!==null)localStorage.setItem('nl_key',realKey);else localStorage.removeItem('nl_key');
+        const ok=code1==='compound_unavailable'&&fast&&oneCall&&remembered&&linksOk;
+        tSet(id,ok,'typed error='+(code1==='compound_unavailable')+', fails fast (no retries)='+fast+', single request='+oneCall+', remembered (2nd call skips network)='+remembered+', search shortcuts shown instead of red error='+linksOk);
         break;
       }
 
