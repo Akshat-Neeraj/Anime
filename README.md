@@ -121,7 +121,7 @@ Fork this repo, then **Settings → Pages → Deploy from a branch → `main` / 
 | `manifest.json`, `service-worker.js`, `icon-*.png` | Make it installable and available offline |
 | `supabase-schema-accounts.sql` | Database tables + security rules for optional accounts |
 
-**Built with:** vanilla HTML / CSS / JavaScript · `localStorage` · a service worker · [Supabase](https://supabase.com) (Auth, Postgres, RLS) · [Groq](https://groq.com) (optional)
+****Built with:** vanilla HTML / CSS / JavaScript · `localStorage` · a service worker · [Supabase](https://supabase.com) (Auth, Postgres, RLS) · [Groq](https://groq.com) (optional)**
 
 ---
 
