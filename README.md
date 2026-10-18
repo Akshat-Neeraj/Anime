@@ -70,58 +70,14 @@
 
 ---
 
-## 🛠 Run your own copy
-
-<details>
-<summary><b>1 · Host it (2 minutes, no build step)</b></summary>
-
-Fork this repo, then **Settings → Pages → Deploy from a branch → `main` / root**. Your copy is live at `https://<you>.github.io/<repo>/`.
-</details>
-
-<details>
-<summary><b>2 · Turn on accounts (optional)</b></summary>
-
-1. Create a free project at [supabase.com](https://supabase.com).
-2. **SQL Editor →** paste all of [`supabase-schema-accounts.sql`](supabase-schema-accounts.sql) **→ Run**. (Safe to re-run. A "destructive operation" warning is just the `DROP POLICY` lines — click *Run query*.)
-3. **Authentication → URL Configuration:** set *Site URL* to your hosted URL and add it under *Redirect URLs*.
-4. Open `index.html`, search for **`PUBLIC BUILD CONFIG`**, and paste your project URL and **anon public** key between the quotes.
-5. Open your site, sign up, then make yourself admin in the SQL Editor:
-   ```sql
-   update profiles set is_admin = true
-   where id = (select id from auth.users where email = 'you@example.com');
-   ```
-</details>
-
-<details>
-<summary><b>3 · Add Google sign-in (optional)</b></summary>
-
-1. [Google Cloud Console](https://console.cloud.google.com) → **Credentials → Create OAuth client ID → Web application**.
-2. *Authorised JavaScript origins:* `https://<you>.github.io` (no path, no trailing slash).
-3. *Authorised redirect URIs:* `https://<your-project-ref>.supabase.co/auth/v1/callback`
-4. Supabase → **Authentication → Providers → Google:** switch it **on**, paste the Client ID and Secret, **Save**.
-</details>
-
-<details>
-<summary><b>4 · Use your own API keys</b></summary>
-
-`SHARED_TMDB_KEY` in `index.html` is a shared fallback that can be rate-limited — replace it with your own free [TMDB](https://www.themoviedb.org/settings/api) key. Leave `HARDCODED_KEY` empty and let each user enter their Groq key in the app.
-</details>
-
-### ⚠️ Security notes for forks
-- The Supabase **anon** key is *meant* to be public — it's safe **only because** the schema turns on Row Level Security. Never paste the **`service_role`** key into this repo.
-- Don't commit a real Groq key.
-
----
-
 ## 📁 What's in the repo
 
 | File | Purpose |
 |---|---|
 | `index.html` | The entire app — HTML, CSS and JavaScript in one file |
 | `manifest.json`, `service-worker.js`, `icon-*.png` | Make it installable and available offline |
-| `supabase-schema-accounts.sql` | Database tables + security rules for optional accounts |
 
-****Built with:** vanilla HTML / CSS / JavaScript · `localStorage` · a service worker · [Supabase](https://supabase.com) (Auth, Postgres, RLS) · [Groq](https://groq.com) (optional)**
+**Built with:** vanilla HTML / CSS / JavaScript · `localStorage` · a service worker · [Supabase](https://supabase.com) (Auth, Postgres, RLS) · [Groq](https://groq.com) (optional)
 
 ---
 
@@ -135,12 +91,14 @@ Titles, covers and metadata come from third-party services, each with its own te
 - [RAWG](https://rawg.io) — games
 - iTunes Search API — music
 
-All titles, artwork and trademarks belong to their respective owners. If you fork this to run a commercial service, read each provider's terms first — for example, TMDB's API is free for non-commercial use and needs a separate license for commercial use.
+All titles, artwork and trademarks belong to their respective owners.
 
 ---
 
 <div align="center">
 
 Made by [@Akshat-Neeraj](https://github.com/Akshat-Neeraj)
+
+© 2026 Akshat Neeraj · All rights reserved
 
 </div>
