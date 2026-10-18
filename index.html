@@ -866,6 +866,7 @@ button,input,select,textarea{font-family:var(--f)}
     <div class="ni" id="autosave-nav-btn" onclick="openOv('ov-autosave');renderAutosaveOv()"><span class="ni-ic">🗂</span>Auto-save to File <span id="autosave-nav-dot" style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0"></span></div>
     <div class="ni" onclick="openOv('ov-account');renderAccountOv()"><span class="ni-ic">👤</span>Account <span id="account-nav-dot" style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0"></span></div>
     <div class="ni" id="admin-nav-btn" style="display:none" onclick="openOv('ov-admin');renderAdminOv()"><span class="ni-ic">🛡</span>Admin</div>
+    <div class="ni" role="button" tabindex="0" onclick="openOv('ov-credits')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"><span class="ni-ic">ℹ️</span>About &amp; Credits</div>
     <div class="ni" onclick="openOv('ov-sharelist');renderShareList()"><span class="ni-ic">📤</span>Share My List</div>
     <div class="ni" onclick="fetchAllCovers()"><span class="ni-ic">🖼</span>Fetch All Covers</div>
     <div class="ni" onclick="openSettings()"><span class="ni-ic">⚙</span>API Key</div>
@@ -1946,6 +1947,31 @@ button,input,select,textarea{font-family:var(--f)}
     <div class="mb" id="autosave-body"></div>
     <div class="mf">
       <button class="btn" onclick="closeOv('ov-autosave')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT & CREDITS MODAL -->
+<div class="ov" id="ov-credits" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+  <div class="mo" style="max-width:460px">
+    <div class="mh">
+      <div class="mt">About &amp; Credits</div>
+      <button class="btn bic bgh" onclick="closeOv('ov-credits')" aria-label="Close">✕</button>
+    </div>
+    <div class="mb" style="font-size:13px;color:var(--tx2);line-height:1.6">
+      <p style="margin:0 0 12px"><b style="color:var(--tx)">NightList</b> is a personal tracker for anime, manga, movies, TV and games. Your library lives in your own browser unless you choose to sign in.</p>
+      <p style="margin:0 0 6px;color:var(--tx);font-weight:600">Data &amp; image sources</p>
+      <ul style="margin:0 0 12px;padding-left:18px">
+        <li><a href="https://www.themoviedb.org" target="_blank" rel="noopener" style="color:var(--ac)">TMDB</a> — movie &amp; TV data and artwork</li>
+        <li><a href="https://anilist.co" target="_blank" rel="noopener" style="color:var(--ac)">AniList</a> — anime &amp; manga data</li>
+        <li><a href="https://jikan.moe" target="_blank" rel="noopener" style="color:var(--ac)">Jikan</a> — unofficial MyAnimeList API</li>
+        <li><a href="https://rawg.io" target="_blank" rel="noopener" style="color:var(--ac)">RAWG</a> — game data</li>
+        <li><a href="https://groq.com" target="_blank" rel="noopener" style="color:var(--ac)">Groq</a> — optional AI features, using your own API key</li>
+      </ul>
+      <p style="margin:0;font-size:11.5px;color:var(--tx3)">This product uses the TMDB API but is not endorsed or certified by TMDB. All titles, covers and trademarks belong to their respective owners.</p>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeOv('ov-credits')">Close</button>
     </div>
   </div>
 </div>
@@ -3478,9 +3504,24 @@ function shareWrapped(){
 // sign-up/login/profile/admin flow yourself once this is deployed, with supabase-schema-accounts.sql
 // already run in your project. See devlog for the full setup checklist.
 let ACCT_URL='',ACCT_KEY='',ACCT_SESSION=null,ACCT_PROFILE=null,_acctPushTimer=null;
+// ── PUBLIC BUILD CONFIG ──────────────────────────────────────────────
+// Paste YOUR Supabase project URL and its **anon public** key between the quotes so every visitor
+// is connected automatically instead of being asked to paste a URL/key into the Account panel.
+// The anon key is DESIGNED to be public — it is only safe because supabase-schema-accounts.sql turns
+// on Row Level Security for every table. NEVER paste the "service_role" key here: it bypasses all
+// security and would hand full database access to anyone who views this file.
+// Leave both empty to keep the old behaviour (each user enters their own connection).
+const PUBLIC_SUPABASE_URL='';       // e.g. 'https://abcdefghijklmnop.supabase.co'
+const PUBLIC_SUPABASE_ANON_KEY='';  // the long key labelled "anon public" (starts with eyJ…)
 function getAcctCfg(){
-  ACCT_URL=localStorage.getItem('nl_acct_url')||localStorage.getItem('nl_sb_url')||'';
-  ACCT_KEY=localStorage.getItem('nl_acct_key')||localStorage.getItem('nl_sb_key')||'';
+  if(PUBLIC_SUPABASE_URL&&PUBLIC_SUPABASE_ANON_KEY){
+    // Baked-in config wins over anything saved in the browser — and deliberately does NOT fall back to
+    // Device Sync's saved URL, which is how an old/wrong project once got picked up by mistake.
+    ACCT_URL=PUBLIC_SUPABASE_URL;ACCT_KEY=PUBLIC_SUPABASE_ANON_KEY;
+  }else{
+    ACCT_URL=localStorage.getItem('nl_acct_url')||localStorage.getItem('nl_sb_url')||'';
+    ACCT_KEY=localStorage.getItem('nl_acct_key')||localStorage.getItem('nl_sb_key')||'';
+  }
   let s=null;try{s=JSON.parse(localStorage.getItem('nl_acct_session')||'null');}catch{s=null;}
   ACCT_SESSION=s;
   let p=null;try{p=JSON.parse(localStorage.getItem('nl_acct_profile')||'null');}catch{p=null;}
@@ -3545,7 +3586,7 @@ async function acctRest(method,path,body){
   if(!(await acctRefreshIfNeeded()))throw new Error('Not logged in — please log in again.');
   const url=ACCT_URL.replace(/\/$/,'')+'/rest/v1'+path;
   const hdrs={'Content-Type':'application/json','apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token};
-  if(method==='POST')hdrs['Prefer']='resolution=merge-duplicates,return=representation';
+  if(method==='POST'&&!path.startsWith('/rpc/'))hdrs['Prefer']='resolution=merge-duplicates,return=representation';
   const r=await fetch(url,{method,headers:hdrs,body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(10000)});
   if(!r.ok)throw new Error('Supabase '+r.status+': '+(await r.text()).slice(0,200));
   if(r.status===204)return null;
@@ -3602,11 +3643,11 @@ function scheduleAcctPush(){
 // ── Admin ──
 async function acctAdminStats(){
   const users=await acctRest('GET','/profiles?select=id,username,is_admin,is_suspended,created_at&order=created_at.desc');
-  const items=await acctRest('GET','/library_items?select=user_id');
+  const items=await acctRest('POST','/rpc/admin_library_counts',{}); // per-user COUNTS only — admins cannot read library rows
   // Deliberately NOT reading library_items.data here for the stats view — an admin can see that a
   // user exists, when they joined, and how many titles they've tracked, but not what those titles
   // are. Keeps "I can suspend abuse" separate from "I can browse everyone's private library."
-  const counts={};(items||[]).forEach(r=>{counts[r.user_id]=(counts[r.user_id]||0)+1;});
+  const counts={};(items||[]).forEach(r=>{counts[r.owner_id]=Number(r.item_count)||0;});
   return{users:users||[],counts};
 }
 async function acctSetSuspended(userId,suspended){
@@ -3747,7 +3788,7 @@ async function acctSaveProfileBtn(){
     toast('Profile saved','ok');
     applyAdultState();renderLib();
     closeOv('ov-account');
-  }catch(e){toast('Save failed: '+e.message,'er');} // stays open on failure so the error is visible, not hidden behind a closed modal
+  }catch(e){toast(/duplicate key|23505|409/i.test(e.message)?'That username is already taken — try another':'Save failed: '+e.message,'er');} // stays open on failure so the error is visible, not hidden behind a closed modal
 }
 async function acctLogOutBtn(){
   await acctLogOut();
@@ -5524,6 +5565,10 @@ async function tRun(id,btn){
             return ok({access_token:'tok-'+uid,refresh_token:'ref-'+uid,expires_in:3600,user:{id:uid,email:'test@mock.local'}});
           }
           if(path==='/auth/v1/logout')return ok({});
+          if(path==='/rest/v1/rpc/admin_library_counts'){
+            const m={};db.items.forEach(r=>{m[r.user_id]=(m[r.user_id]||0)+1;});
+            return ok(Object.entries(m).map(([k,v])=>({owner_id:k,item_count:v})));
+          }
           if(path==='/rest/v1/profiles'){
             const idFilter=qs.get('id');
             if(method==='GET'&&idFilter){
