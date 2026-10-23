@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a12">
+<title>Privacy Policy — NightList</title>
+<style>
+  :root{--bg:#0a0a12;--card:#12121c;--line:#23233a;--tx:#e8e8f2;--tx2:#a9a9c4;--ac:#8b5cf6}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:720px;margin:0 auto;padding:32px 20px 64px}
+  a{color:var(--ac)}
+  .back{display:inline-block;margin-bottom:18px;font-size:14px;text-decoration:none}
+  h1{font-size:30px;margin:0 0 4px}
+  h2{font-size:19px;margin:34px 0 8px;padding-top:18px;border-top:1px solid var(--line)}
+  p,li{color:var(--tx2)}
+  li{margin:4px 0}
+  .meta{color:var(--tx2);font-size:14px;margin:0 0 22px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:18px 0}
+  .box p{margin:0 0 8px;color:var(--tx)} .box ul{margin:0;padding-left:20px}
+  mark{background:#facc15;color:#111;padding:0 4px;border-radius:3px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--tx2)}
+  th{color:var(--tx)}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="./">← Back to NightList</a>
+<h1>Privacy Policy</h1>
+<p class="meta">Last updated: 18 October 2026</p>
+
+<p>NightList is a personal media tracker run by Akshat Neeraj ("I", "me"). This page explains what information NightList handles, why, and what you can do about it. You can reach me at <a href="mailto:nightlist.help@gmail.com">nightlist.help@gmail.com</a>.</p>
+
+<div class="box">
+  <p><b>The short version</b></p>
+  <ul>
+    <li>Without an account, your library stays on your device. I never receive it.</li>
+    <li>With an account, I store your email and your library so it can sync between devices.</li>
+    <li>No ads, no tracking scripts, no selling your data.</li>
+    <li>You can delete your account and cloud library yourself, any time, from the Account panel.</li>
+  </ul>
+</div>
+
+<h2>1. What NightList handles</h2>
+<p><b>If you don't create an account.</b> Your library, settings and any API keys you enter are kept in your browser's local storage on your own device. They are not sent to me.</p>
+<p><b>If you create an account</b>, I store:</p>
+<ul>
+  <li>your email address and your login details (your password is stored by the login service in hashed form, so I can't read it);</li>
+  <li>a username (it starts as the part of your email before the "@" — you can change it in the Account panel);</li>
+  <li>your adult-content setting (off by default);</li>
+  <li>your library: the titles, types, statuses, ratings, tags, notes, progress and similar details you enter;</li>
+  <li>when your account was created.</li>
+</ul>
+<p><b>If you sign in with Google</b>, Google tells the login service your email address, and may also share basic profile details such as your name and picture, which the login service may keep with your login record. I only use your email.</p>
+<p><b>Technical data.</b> The services that host and run NightList (listed below) may log things like IP addresses and request details as a normal part of operating their services. I don't run analytics or advertising trackers in the app.</p>
+
+<h2>2. Why I use it</h2>
+<ul>
+  <li>to run your account and sync your library between your devices;</li>
+  <li>to send account emails (such as email confirmation or password reset) when those are switched on;</li>
+  <li>to keep the service safe — for example, suspending an account that is abusing it;</li>
+  <li>to fix faults.</li>
+</ul>
+<p>I don't sell your information, and I don't use it for advertising.</p>
+
+<h2>3. Who else is involved</h2>
+<table>
+  <tr><th>Service</th><th>What it does</th></tr>
+  <tr><td>GitHub Pages</td><td>Hosts the NightList website.</td></tr>
+  <tr><td>Supabase</td><td>Provides the login system and the database that stores account data.</td></tr>
+  <tr><td>Google</td><td>Google sign-in (only if you choose it), and Google Fonts, which the page loads for its typefaces.</td></tr>
+  <tr><td>TMDB, AniList, Jikan, RAWG, iTunes Search</td><td>Your browser contacts these directly to look up cover art and details. They receive the title being looked up and your IP address.</td></tr>
+  <tr><td>Groq</td><td>Only if you add your own Groq API key and use an AI feature. Your browser sends the request straight to Groq, including whatever text that feature needs (for example a title, or details from your library).</td></tr>
+</table>
+<p>Each of these has its own privacy policy. I don't control how they handle data they receive.</p>
+
+<h2>4. Who can see your data</h2>
+<ul>
+  <li><b>Other users can't see your library.</b> The database is set up so each account can only read its own rows.</li>
+  <li><b>The admin tools</b> show usernames, when accounts were created, and how many titles each account has — not what is in anyone's library.</li>
+  <li>I run the database, so I technically have access to it through Supabase's dashboard. I won't browse the contents of your library except where needed to fix a fault, enforce the Terms, or comply with the law.</li>
+</ul>
+
+<h2>5. Adult-tagged content</h2>
+<p>Adult-tagged titles are hidden by default. Turning the setting on means you confirm you are 18 or older. Your adult-tagged titles are stored in your library like any other titles, and the app leaves them out of exports and shares it creates for other people.</p>
+
+<h2>6. Keeping and deleting your data</h2>
+<p>I keep your account data until you delete your account. To delete it, open <b>Account → Delete account</b>. That removes your login, profile and cloud library from the live database. Copies may remain in backups for a limited time. Data stored only in your own browser is yours to clear through your browser settings.</p>
+
+<h2>7. Your choices</h2>
+<p>Depending on where you live, you may have rights over your information, such as seeing it, correcting it, or having it erased. You can see and edit your library in the app, download it with <b>Export JSON</b>, and delete your account yourself. For anything else, email <a href="mailto:nightlist.help@gmail.com">nightlist.help@gmail.com</a>.</p>
+
+<h2>8. Age</h2>
+<p>Accounts are for people who are 18 or older. I don't knowingly collect information from anyone under 18. If you think someone under 18 has an account, tell me and I will delete it. Using NightList without an account doesn't involve sending me any personal information.</p>
+
+<h2>9. Security</h2>
+<p>Connections use HTTPS, and the database restricts each account to its own data. No system is perfectly secure, so please use a strong, unique password.</p>
+
+<h2>10. Changes</h2>
+<p>If I change this policy I'll update the date at the top. If a change is significant I'll try to tell account holders in the app.</p>
+
+<h2>11. Contact</h2>
+<p>Akshat Neeraj — <a href="mailto:nightlist.help@gmail.com">nightlist.help@gmail.com</a></p>
+</main>
+</body>
+</html>
