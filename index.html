@@ -3516,8 +3516,8 @@ let ACCT_URL='',ACCT_KEY='',ACCT_SESSION=null,ACCT_PROFILE=null,_acctPushTimer=n
 // on Row Level Security for every table. NEVER paste the "service_role" key here: it bypasses all
 // security and would hand full database access to anyone who views this file.
 // Leave both empty to keep the old behaviour (each user enters their own connection).
-const PUBLIC_SUPABASE_URL='';       // e.g. 'https://abcdefghijklmnop.supabase.co'
-const PUBLIC_SUPABASE_ANON_KEY='';  // the long key labelled "anon public" (starts with eyJ…)
+const PUBLIC_SUPABASE_URL='https://gqbprscvaucsacumpwop.supabase.co';       // e.g. 'https://abcdefghijklmnop.supabase.co'
+const PUBLIC_SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxYnByc2N2YXVjc2FjdW1wd29wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxMTM4OTAsImV4cCI6MjEwMTY4OTg5MH0.ddaEaixaAzsxt5lJ6kvtEiRkgR-6sfxthxryw5g40JU';  // the long key labelled "anon public" (starts with eyJ…)
 function getAcctCfg(){
   if(PUBLIC_SUPABASE_URL&&PUBLIC_SUPABASE_ANON_KEY){
     // Baked-in config wins over anything saved in the browser — and deliberately does NOT fall back to
