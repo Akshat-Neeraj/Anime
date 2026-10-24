@@ -1543,6 +1543,8 @@ button,input,select,textarea{font-family:var(--f)}
       <div class="tp-note" id="tn-accountextras"></div>
       <button class="tp-btn" id="t-accountnosetup" onclick="tRun('accountnosetup',this)">⊙ Visitors never see the Supabase URL/key form</button>
       <div class="tp-note" id="tn-accountnosetup"></div>
+      <button class="tp-btn" id="t-oautherror" onclick="tRun('oautherror',this)">⊙ Failed/expired sign-in links show the reason instead of silently reloading</button>
+      <div class="tp-note" id="tn-oautherror"></div>
       <button class="tp-btn" id="t-letterboxd" onclick="tRun('letterboxd',this)">⊙ Letterboxd CSV parser</button>
       <div class="tp-note" id="tn-letterboxd"></div>
       <button class="tp-btn" id="t-foryou" onclick="tRun('foryou',this)">⊙ For You recommendations</button>
@@ -3681,8 +3683,7 @@ function renderAccountOv(){
     return;
   }
   if(!acctLoggedIn()){
-    body.innerHTML='<button class="btn bs" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px" onclick="acctSignInWithGoogle()"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.6h7.1c4.2-3.8 6.6-9.5 6.6-16.3z"/><path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.6c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.6-3.9-12.4-9.1H4.3v5.7C7.9 41 15.3 46 24 46z"/><path fill="#FBBC05" d="M11.6 27.9c-.5-1.3-.7-2.7-.7-4.1s.3-2.8.7-4.1v-5.7H4.3C2.9 16.8 2 20.3 2 24s.9 7.2 2.3 10.1l7.3-5.7v-.5z"/><path fill="#EA4335" d="M24 10.8c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C35 4.3 30 2 24 2 15.3 2 7.9 7 4.3 13.9l7.3 5.7c1.8-5.2 6.6-9.1 12.4-8.8z"/></svg>Continue with Google</button>'
-      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--tx3);font-size:11px"><div style="flex:1;height:1px;background:var(--b1)"></div>or<div style="flex:1;height:1px;background:var(--b1)"></div></div>'
+    body.innerHTML=''
       +'<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn bs" id="acct-tab-in" onclick="acctSwitchTab(\'in\')">Log In</button><button class="btn bs" id="acct-tab-up" onclick="acctSwitchTab(\'up\')">Sign Up</button></div>'
       +'<input type="email" class="fi" id="acct-email-inp" placeholder="email" style="margin-bottom:8px" autocomplete="username">'
       +'<div style="position:relative;margin-bottom:6px"><input type="password" class="fi" id="acct-pass-inp" placeholder="password" style="width:100%;padding-right:36px" autocomplete="current-password"><button type="button" onclick="acctTogglePwVis()" aria-label="Show password" title="Show password" style="position:absolute;right:0;top:0;bottom:0;width:40px;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center">👁</button></div>'
@@ -3749,16 +3750,6 @@ async function acctSubmitForgotPassword(){
     msg.style.color='var(--gr)';msg.style.display='block';
   }
 }
-function acctSignInWithGoogle(){
-  if(!ACCT_URL||!ACCT_KEY){toast('Connect your Supabase project first','er');return;}
-  // NOTE: this requires Google sign-in to actually be turned on for this Supabase project —
-  // Authentication → Providers → Google, with a real Google Cloud OAuth client id/secret entered
-  // there. That setup lives entirely on Supabase/Google's side; nothing in this file can do it —
-  // same category as the ads/payments setup mentioned earlier. Until that's done, clicking this
-  // button will land on an error page from Supabase, not a bug in this code.
-  const redirectTo=window.location.href.split('#')[0];
-  window.location.href=ACCT_URL.replace(/\/$/,'')+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirectTo);
-}
 async function acctUpdateAuthUser(fields){
   if(!(await acctRefreshIfNeeded()))throw new Error('Not logged in.');
   const r=await fetch(ACCT_URL.replace(/\/$/,'')+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json','apikey':ACCT_KEY,'Authorization':'Bearer '+ACCT_SESSION.access_token},body:JSON.stringify(fields),signal:AbortSignal.timeout(10000)});
@@ -3806,9 +3797,30 @@ async function acctDeleteAccount(){
   }catch(e){err.textContent='Could not delete: '+e.message;err.style.display='block';}
 }
 async function acctHandleOAuthRedirect(){
-  // After Google sign-in, Supabase sends the browser back here with the session in the URL's
+  // After an email link (confirm / reset), Supabase sends the browser back here with the session in the URL's
   // hash fragment (#access_token=...&refresh_token=...&...), not a normal query string — that's
   // the standard implicit-flow shape, deliberately never sent to any server, not even ours.
+  // Sign-in can also FAIL on the server side (e.g. Google's code can't be exchanged because the Client
+  // ID/Secret saved in Supabase don't match Google's). Supabase then sends the browser back here with the
+  // reason in the address bar (?error=… or #error=…). That used to be ignored, so the page just reloaded
+  // and it looked like nothing happened. Show the reason instead.
+  {
+    const _q=new URLSearchParams(location.search),_h=new URLSearchParams(location.hash.replace(/^#/,''));
+    const _err=_h.get('error')||_q.get('error');
+    if(_err&&!location.hash.includes('access_token=')){
+      const desc=_h.get('error_description')||_q.get('error_description')||_err;
+      console.error('Sign-in error from Supabase:',_err,desc);
+      const _code=_h.get('error_code')||_q.get('error_code')||'';
+      let msg='Sign-in did not complete.';
+      // An expired or already-used email link (confirm / reset) arrives as error=access_denied, so check it first.
+      if(/otp_expired|expired|invalid/i.test(_code+' '+desc))msg='That email link has expired or was already used. Please request a new one.';
+      else if(/access_denied|cancel/i.test(_err+' '+desc))msg='Sign-in was cancelled.';
+      else if(/redirect/i.test(desc))msg='Sign-in redirect is not allowed — the site address is missing from Supabase Redirect URLs.';
+      history.replaceState(null,'',location.pathname);
+      toast(msg,'er');
+      return false;
+    }
+  }
   if(!location.hash.includes('access_token='))return false;
   const params=new URLSearchParams(location.hash.slice(1));
   const accessToken=params.get('access_token'),refreshToken=params.get('refresh_token'),expiresIn=parseInt(params.get('expires_in')||'3600'),linkType=params.get('type')||'';
@@ -3816,7 +3828,7 @@ async function acctHandleOAuthRedirect(){
   try{
     const r=await fetch(ACCT_URL.replace(/\/$/,'')+'/auth/v1/user',{headers:{'apikey':ACCT_KEY,'Authorization':'Bearer '+accessToken},signal:AbortSignal.timeout(10000)});
     const u=await r.json();
-    if(!r.ok||!u.id)throw new Error(u.msg||'Could not verify the Google sign-in.');
+    if(!r.ok||!u.id)throw new Error(u.msg||'Could not verify the sign-in link.');
     ACCT_SESSION={access_token:accessToken,refresh_token:refreshToken,user_id:u.id,email:u.email,expires_at:Date.now()+expiresIn*1000};
     saveAcctCfg();
     history.replaceState(null,'',location.pathname+location.search); // scrub the token out of the visible URL
@@ -5910,6 +5922,28 @@ async function tRun(id,btn){
         ACCT_URL=realUrl;ACCT_KEY=realKey;ACCT_SESSION=realSession;ACCT_PROFILE=realProfile;
         renderAccountOv();
         tSet(id,visitorOk&&ownerOk,'visitor sees no URL/key boxes (just a friendly note)='+visitorOk+', owner can still reach the form with ?setup=1='+ownerOk);
+        break;
+      }
+
+      case 'oautherror':{
+        const savedUrl=location.pathname+location.search+location.hash;
+        const tc=document.getElementById('tc');
+        const toasts=()=>Array.from(tc.querySelectorAll('.toast')).map(t=>t.textContent).join(' | ');
+        tc.innerHTML='';
+        history.replaceState(null,'','#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired');
+        const r1=await acctHandleOAuthRedirect();
+        const exchangeOk=r1===false&&/expired or was already used/.test(toasts())&&location.hash==='';
+        tc.innerHTML='';
+        history.replaceState(null,'','#error=access_denied&error_description=User+cancelled');
+        const r2=await acctHandleOAuthRedirect();
+        const cancelOk=r2===false&&/cancelled/.test(toasts())&&location.hash==='';
+        tc.innerHTML='';
+        history.replaceState(null,'',location.pathname);
+        const r3=await acctHandleOAuthRedirect();
+        const quietOk=r3===false&&toasts()==='';          // an ordinary page load must stay silent
+        tc.innerHTML='';
+        history.replaceState(null,'',savedUrl);
+        tSet(id,exchangeOk&&cancelOk&&quietOk,'expired email link explained='+exchangeOk+', cancelled sign-in explained='+cancelOk+', normal page load stays silent='+quietOk);
         break;
       }
 
